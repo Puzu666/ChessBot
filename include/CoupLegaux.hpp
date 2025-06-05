@@ -7,13 +7,15 @@
 class CoupLegaux{
 private:
 Echiquier _echiquier;
-std::vector<std::array<int,2>> _coupLegauxBlanc;
-std::vector<std::array<int,2>> _coupLegauxNoir;
+std::vector<std::pair<int, int>> _coupLegauxBlanc;
+std::vector<std::pair<int, int>> _coupLegauxNoir;
 
 public:
 CoupLegaux();
 void allCoupLegaux();
-std::vector<std::array<int, 2>> getCoupCavalier(int,int) const;
+std::vector<std::pair<int, int>> getCoupCavalier(int,int) const;
+std::vector<std::pair<int, int>> getCoupTour(int, int) const;
+std::vector<std::pair<int, int>> getCoupFou(int, int) const;
 };
 
 #endif
