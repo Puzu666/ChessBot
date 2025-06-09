@@ -17,7 +17,7 @@ char _plateau[8][8]={
 
 public:
 Echiquier();
-constexpr char getCase(int lettre, int numero)
+constexpr char getCase(int lettre, int numero) const
 {
     return this->_plateau[lettre][numero];
 }
