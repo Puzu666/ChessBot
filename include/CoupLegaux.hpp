@@ -14,11 +14,11 @@ public:
 CoupLegaux();
 void allCoupLegaux();
 
-std::vector<std::pair<int, int>> getCoupCavalier(int,int) const;
-std::vector<std::pair<int, int>> getCoupTour(int, int) const;
-std::vector<std::pair<int, int>> getCoupFou(int, int) const;
-std::vector<std::pair<int, int>> getCoupDame(int, int) const;
-std::vector<std::pair<int, int>> getCoupRoi(int, int) const;
+std::vector<std::pair<int, int>> getCoupCavalier(int, int, char) const;
+std::vector<std::pair<int, int>> getCoupTour(int, int, char) const;
+std::vector<std::pair<int, int>> getCoupFou(int, int, char) const;
+std::vector<std::pair<int, int>> getCoupDame(int, int, char) const;
+std::vector<std::pair<int, int>> getCoupRoi(int, int, char) const;
 std::vector<std::pair<int, int>> getCoupPion(int, int, char) const;
 };
 

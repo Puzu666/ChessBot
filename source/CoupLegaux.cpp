@@ -10,29 +10,29 @@ void CoupLegaux::allCoupLegaux()
     for(int i=0; i<8; i++){
         for(int j=0; j<8; j++){
             if(this->_echiquier.getCase(i,j)=='C'){
-                temp = getCoupCavalier(i,j);
+                temp = getCoupCavalier(i,j,'B');
                 this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
             }else if(this->_echiquier.getCase(i,j)=='c'){
-                temp = getCoupCavalier(i,j);
+                temp = getCoupCavalier(i, j, 'n');
                 this->_coupLegauxNoir.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
             }else if(this->_echiquier.getCase(i,j)=='t'){
-                temp = getCoupTour(i,j);
+                temp = getCoupTour(i,j, 'n');
                 this->_coupLegauxNoir.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
             }else if(this->_echiquier.getCase(i,j)=='T'){
-                temp = getCoupTour(i,j);
+                temp = getCoupTour(i,j,'B');
                 this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
             }else if(this->_echiquier.getCase(i,j)=='F'){
-                temp = getCoupFou(i,j);
+                temp = getCoupFou(i,j,'B');
                 this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
             }else if(this->_echiquier.getCase(i,j)=='f'){
-                temp = getCoupFou(i,j);
+                temp = getCoupFou(i,j, 'n');
                 this->_coupLegauxNoir.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
             }
         }
     }
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupCavalier(int lettre, int numero) const
+std::vector<std::pair<int, int>> CoupLegaux::getCoupCavalier(int lettre, int numero, char couleur) const
 {
     std::pair<int, int> temp;
     std::vector<std::pair<int, int>> coupCavalier;
@@ -68,30 +68,75 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupCavalier(int lettre, int num
     temp.second=numero+2;
     if(lettre<8&&lettre>=0&&numero<8&&numero>=0)
     coupCavalier.push_back(temp);
-
+    int i = 0;
+    if(couleur=='B'){
+        while(i<coupCavalier.size())
+        {
+            if(this->_echiquier.getCase(coupCavalier[i].first, coupCavalier[i].second)=='F,C,D,R,P,T'){
+                coupCavalier.erase(coupCavalier.begin() + i);
+                i--;
+            }
+            i++;
+        }
+    }
+    else{
+        while(i<coupCavalier.size())
+        {
+            if(this->_echiquier.getCase(coupCavalier[i].first, coupCavalier[i].second)=='f,c,d,r,p,t'){
+                coupCavalier.erase(coupCavalier.begin() + i);
+                i--;
+            }
+            i++;
+        }
+    }
+    
     return coupCavalier;
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupTour(int lettre, int numero) const
+std::vector<std::pair<int, int>> CoupLegaux::getCoupTour(int lettre, int numero, char couleur) const
 {
     std::pair<int, int> temp;
+    bool lettreposs=true;
+    bool numeroposs=true;
     std::vector<std::pair<int, int>> coupTour;
     for(int i=0; i<8; i++){
-        temp.first=lettre;
-        temp.second=i;
-        if(i!=numero){
+        if(i<lettre&&this->_echiquier.getCase(i,numero)!='v'&&lettreposs==true){
+            coupTour.erase(coupTour.begin(),coupTour.end());  
+        }
+        else if(i<numero&&this->_echiquier.getCase(lettre, i)!='v'&&numeroposs==true){
+            coupTour.erase(coupTour.begin(),coupTour.end()); 
+        }
+        if(couleur=='B'&&this->_echiquier.getCase(i,numero)!='T,C,D,R,P,F'&&lettreposs==true){
+            temp.first=i;
+            temp.second=numero;
             coupTour.push_back(temp);
         }
-        temp.first=i;
-        temp.second=numero;
-        if(i!=lettre){
+        else if(this->_echiquier.getCase(i,numero)!='t,c,d,r,p,f'&&lettreposs==true){
+            temp.first=i;
+            temp.second=numero;
             coupTour.push_back(temp);
         }
-    }
+        if(couleur=='B'&&this->_echiquier.getCase(lettre, i)!='T,C,D,R,P,F'&&numeroposs==true){
+            temp.first=i;
+            temp.second=numero;
+            coupTour.push_back(temp);
+        }
+        else if(this->_echiquier.getCase(lettre, i)!='t,c,d,r,p,f'&&numeroposs==true){
+            temp.first=i;
+            temp.second=numero;
+            coupTour.push_back(temp);
+        }
+        if(i>lettre&&this->_echiquier.getCase(i, numero)!='v'&&lettreposs==true){
+            lettreposs=false;
+        }
+        if(i>numero&&this->_echiquier.getCase(lettre, i)!='v'&&numeroposs==true){
+            numeroposs=false;
+        }
+    } 
     return coupTour;
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupFou(int lettre, int numero) const
+std::vector<std::pair<int, int>> CoupLegaux::getCoupFou(int lettre, int numero, char couleur) const
 {
     std::pair<int, int> temp;
     std::vector<std::pair<int, int>> coupFou;
@@ -145,7 +190,7 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupFou(int lettre, int numero) 
     return coupFou;
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupDame(int lettre, int numero) const
+std::vector<std::pair<int, int>> CoupLegaux::getCoupDame(int lettre, int numero, char couleur) const
 {
     std::pair<int, int> temp;
     std::vector<std::pair<int, int>> coupDame;
@@ -211,21 +256,36 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupDame(int lettre, int numero)
     return coupDame;
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupRoi(int lettre, int numero) const
+std::vector<std::pair<int, int>> CoupLegaux::getCoupRoi(int lettre, int numero, char couleur) const
 {
     std::pair<int, int> temp;
     std::vector<std::pair<int, int>> coupRoi;
 
-    for(int i=lettre-1; i<lettre+2; i++){
-        for(int j=numero-1; j<numero+2; j++){
-            if(lettre>=0&&lettre<8&&numero>=0&&numero<8){
-                temp.first=i;
-                temp.second=j;
-                if(i!=lettre||j!=numero)
-                coupRoi.push_back(temp);
+    if(couleur=='B'){
+        for(int i=lettre-1; i<lettre+2; i++){
+            for(int j=numero-1; j<numero+2; j++){
+                if(i>=0&&i<8&&j>=0&&j<8&&this->_echiquier.getCase(i,j)!='F,D,T,C,P'){
+                    temp.first=i;
+                    temp.second=j;
+                    if(i!=lettre||j!=numero)
+                    coupRoi.push_back(temp);
+                }
             }
         }
     }
+    else{
+        for(int i=lettre-1; i<lettre+2; i++){
+            for(int j=numero-1; j<numero+2; j++){
+                if(i>=0&&i<8&&j>=0&&j<8&&this->_echiquier.getCase(i,j)!='f,d,t,c,p'){
+                    temp.first=i;
+                    temp.second=j;
+                    if(i!=lettre||j!=numero)
+                    coupRoi.push_back(temp);
+                }
+            }
+        }
+    }
+    
     return coupRoi;
 }
 
