@@ -9,6 +9,7 @@ private:
 Echiquier _echiquier;
 std::vector<std::pair<int, int>> _coupLegauxBlanc;
 std::vector<std::pair<int, int>> _coupLegauxNoir;
+std::vector<std::tuple<std::pair<int, int>, int, char>> _coupParPiece;
 
 public:
 CoupLegaux();

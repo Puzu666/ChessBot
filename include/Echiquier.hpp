@@ -21,6 +21,8 @@ constexpr char getCase(int lettre, int numero) const
 {
     return this->_plateau[lettre][numero];
 }
+
+bool move(char, int, int, int, int);
 //Pour debuger, à retirer une fois le programme terminé
 void printEchiquier() const;
 };
