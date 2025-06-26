@@ -9,11 +9,13 @@ private:
 Echiquier _echiquier;
 std::vector<std::pair<int, int>> _coupLegauxBlanc;
 std::vector<std::pair<int, int>> _coupLegauxNoir;
-std::vector<std::tuple<std::pair<int, int>, int, char>> _coupParPiece;
+std::vector<std::tuple<std::pair<int, int>, int, char>> _coupParPieceBlanc;
+std::vector<std::tuple<std::pair<int, int>, int, char>> _coupParPieceNoir;
 
 public:
 CoupLegaux();
-void allCoupLegaux();
+void allCoupLegaux(bool);
+void getCoupPiece(int, int, char);
 
 std::vector<std::pair<int, int>> getCoupCavalier(int, int, char) const;
 std::vector<std::pair<int, int>> getCoupTour(int, int, char) const;

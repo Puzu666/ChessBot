@@ -22,7 +22,7 @@ constexpr char getCase(int lettre, int numero) const
     return this->_plateau[lettre][numero];
 }
 
-bool move(char, int, int, int, int);
+bool move(char piece, int lettreInitial, int numeroInitial, int lettreFinal, int numeroFinal);
 //Pour debuger, à retirer une fois le programme terminé
 void printEchiquier() const;
 };

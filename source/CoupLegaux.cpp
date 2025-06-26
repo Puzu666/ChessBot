@@ -4,52 +4,157 @@ CoupLegaux::CoupLegaux()
 {
 }
 
-void CoupLegaux::allCoupLegaux()
+//true==blanc; false==noir
+void CoupLegaux::allCoupLegaux(bool couleur)
 {
-    std::vector<std::pair<int, int>> temp;
+    char pieceTemp;
     this->_coupLegauxBlanc.clear();
     this->_coupLegauxNoir.clear();
-    this->_coupParPiece.clear();
-    for(int i=0; i<8; i++){
-        for(int j=0; j<8; j++){
-            if(this->_echiquier.getCase(i,j)=='C'){
-                temp = getCoupCavalier(i,j,'B');
-                this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='c'){
-                temp = getCoupCavalier(i, j, 'n');
-                this->_coupLegauxNoir.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='t'){
-                temp = getCoupTour(i,j, 'n');
-                this->_coupLegauxNoir.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='T'){
-                temp = getCoupTour(i,j,'B');
-                this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='F'){
-                temp = getCoupFou(i,j,'B');
-                this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='f'){
-                temp = getCoupFou(i,j, 'n');
-                this->_coupLegauxNoir.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='D'){
-                temp = getCoupDame(i, j, 'B');
-                this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='d'){
-                temp = getCoupDame(i, j, 'n');
-                this->_coupLegauxNoir.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='R'){
-                temp = getCoupRoi(i, j, 'B');
-                this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='r'){
-                temp = getCoupRoi(i, j, 'n');
-                this->_coupLegauxNoir.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='P'){
-                temp = getCoupPion(i, j, 'B');
-                this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }else if(this->_echiquier.getCase(i,j)=='p'){
-                temp = getCoupPion(i, j, 'n');
-                this->_coupLegauxNoir.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-            }
+    this->_coupParPieceBlanc.clear();
+    this->_coupParPieceNoir.clear();
+    for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 8; j++){
+            pieceTemp = this->_echiquier.getCase(i, j);
+            getCoupPiece(i, j, pieceTemp);
         }
+    }
+    if(couleur){
+
+    }
+    else{
+        
+    }
+}
+
+void CoupLegaux::getCoupPiece(int lettre, int numero, char pieceTemp)
+{
+    std::vector<std::pair<int, int>> temp;
+    std::tuple<std::pair<int, int>, int, char> coupParPieceTemp;
+    size_t tailleVectorBlanc = 0;
+    size_t tailleVectorNoir = 0;
+    switch(pieceTemp){
+        case 'v':
+        break;
+        case 'C':
+        temp = getCoupCavalier(lettre, numero, 'B');
+        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
+        std::get<2>(coupParPieceTemp) = 'C';
+        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
+        tailleVectorBlanc = this->_coupLegauxBlanc.size();
+        break;
+        case 'c':
+        temp = getCoupCavalier(lettre, numero, 'n');
+        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
+        std::get<2>(coupParPieceTemp) = 'C';
+        this->_coupParPieceNoir.push_back(coupParPieceTemp);
+        tailleVectorNoir = this->_coupLegauxNoir.size();
+        break;
+        case 'T':
+        temp = getCoupTour(lettre, numero, 'B');
+        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
+        std::get<2>(coupParPieceTemp) = 'T';
+        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
+        tailleVectorBlanc = this->_coupLegauxBlanc.size();
+        break;
+        case 't':
+        temp = getCoupTour(lettre, numero, 'n');
+        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
+        std::get<2>(coupParPieceTemp) = 'T';
+        this->_coupParPieceNoir.push_back(coupParPieceTemp);
+        tailleVectorNoir = this->_coupLegauxNoir.size();
+        break;
+        case 'F':
+        temp = getCoupFou(lettre, numero, 'B');
+        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
+        std::get<2>(coupParPieceTemp) = 'F';
+        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
+        tailleVectorBlanc = this->_coupLegauxBlanc.size();
+        break;
+        case 'f':
+        temp = getCoupFou(lettre, numero, 'n');
+        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
+        std::get<2>(coupParPieceTemp) = 'F';
+        this->_coupParPieceNoir.push_back(coupParPieceTemp);
+        tailleVectorNoir = this->_coupLegauxNoir.size();
+        break;
+        case 'D':
+        temp = getCoupDame(lettre, numero, 'B');
+        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
+        std::get<2>(coupParPieceTemp) = 'D';
+        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
+        tailleVectorBlanc = this->_coupLegauxBlanc.size();
+        break;
+        case 'd':
+        temp = getCoupDame(lettre, numero, 'n');
+        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
+        std::get<2>(coupParPieceTemp) = 'D';
+        this->_coupParPieceNoir.push_back(coupParPieceTemp);
+        tailleVectorNoir = this->_coupLegauxNoir.size();
+        break;
+        case 'P':
+        temp = getCoupPion(lettre, numero, 'B');
+        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
+        std::get<2>(coupParPieceTemp) = 'P';
+        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
+        tailleVectorBlanc = this->_coupLegauxBlanc.size();
+        break;
+        case 'p':
+        temp = getCoupPion(lettre, numero, 'n');
+        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
+        std::get<2>(coupParPieceTemp) = 'P';
+        this->_coupParPieceNoir.push_back(coupParPieceTemp);
+        tailleVectorNoir = this->_coupLegauxNoir.size();
+        break;
+        case 'R':
+        temp = getCoupRoi(lettre, numero, 'B');
+        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
+        std::get<2>(coupParPieceTemp) = 'R';
+        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
+        tailleVectorBlanc = this->_coupLegauxBlanc.size();
+        break;
+        case 'r':
+        temp = getCoupRoi(lettre, numero, 'n');
+        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
+        std::get<0>(coupParPieceTemp).first = lettre;
+        std::get<0>(coupParPieceTemp).second = numero;
+        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
+        std::get<2>(coupParPieceTemp) = 'R';
+        this->_coupParPieceNoir.push_back(coupParPieceTemp);
+        tailleVectorNoir = this->_coupLegauxNoir.size();
+        break;
     }
 }
 
