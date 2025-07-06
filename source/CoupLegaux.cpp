@@ -3,6 +3,12 @@
 
 CoupLegaux::CoupLegaux()
 {
+    this->_dernierCoup.posIni.first = -1;
+    this->_dernierCoup.posIni.second = -1;
+    this->_dernierCoup.posFin.first = -1;
+    this->_dernierCoup.posFin.second = -1;
+    this->_dernierCoup.piece = 'v';
+    this->_dernierCoup.couleur = 'n';
 }
 
 //true==blanc; false==noir
@@ -416,6 +422,15 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupPion(int lettre, int numero,
                 coupPion.push_back(temp);
             }
         }
+        if (numero == 5 && this->_dernierCoup.piece == 'P' 
+            && this->_dernierCoup.couleur!='B' 
+            && this->_dernierCoup.posIni.first == 7
+            && this->_dernierCoup.posFin.first == 5
+            && (this->_dernierCoup.posFin.second == lettre - 1 || this->_dernierCoup.posFin.second == lettre + 1)){
+                temp.first = this->_dernierCoup.posFin.first;
+                temp.second = this->_dernierCoup.posFin.second + 1;
+                coupPion.push_back(temp);
+            }
     }
     else{
         if(this->_echiquier.getCase(lettre, numero-1)=='v'){
@@ -441,6 +456,15 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupPion(int lettre, int numero,
                 coupPion.push_back(temp);
             }
         }
+        if (numero == 4 && this->_dernierCoup.piece == 'P' 
+            && this->_dernierCoup.couleur!='B' 
+            && this->_dernierCoup.posIni.first == 2
+            && this->_dernierCoup.posFin.first == 4
+            && (this->_dernierCoup.posFin.second == lettre - 1 || this->_dernierCoup.posFin.second == lettre + 1)){
+                temp.first = this->_dernierCoup.posFin.first;
+                temp.second = this->_dernierCoup.posFin.second - 1;
+                coupPion.push_back(temp);
+            }
     }
     return coupPion;
 }
@@ -455,18 +479,18 @@ void CoupLegaux::move(int index, char couleur)
             i++;
         }
         i--;
-        std::get <0> (this->_dernierCoup).first = std::get <0> (this->_coupParPieceBlanc[i]).first;
-        std::get <0> (this->_dernierCoup).second = std::get <0> (this->_coupParPieceBlanc[i]).second;
-        std::get <1> (this->_dernierCoup).first = this->_coupLegauxBlanc[index].first;
-        std::get <1> (this->_dernierCoup).second = this->_coupLegauxBlanc[index].second;
-        std::get <2> (this->_dernierCoup) = std::get <2> (this->_coupParPieceBlanc[i]);
-        std::get <3> (this->_dernierCoup) = true;
+        this->_dernierCoup.posIni.first = std::get <0> (this->_coupParPieceBlanc[i]).first;
+        this->_dernierCoup.posIni.second = std::get <0> (this->_coupParPieceBlanc[i]).second;
+        this->_dernierCoup.posFin.first = this->_coupLegauxBlanc[index].first;
+        this->_dernierCoup.posFin.second = this->_coupLegauxBlanc[index].second;
+        this->_dernierCoup.piece = std::get <2> (this->_coupParPieceBlanc[i]);
+        this->_dernierCoup.couleur = 'B';
         bool verif;
-        verif = this->_echiquier.move(std::get <2> (this->_dernierCoup) 
-                                    , std::get <0> (this->_dernierCoup).first
-                                    , std::get <0> (this->_dernierCoup).second
-                                    , std::get <1> (this->_dernierCoup).first
-                                    , std::get <1> (this->_dernierCoup).second);
+        verif = this->_echiquier.move(this->_dernierCoup.piece 
+                                    , this->_dernierCoup.posIni.first
+                                    , this->_dernierCoup.posIni.second
+                                    , this->_dernierCoup.posFin.first
+                                    , this->_dernierCoup.posFin.second);
         assert(verif);
     }
     else if(index < this->_coupLegauxNoir.size()){
@@ -477,18 +501,18 @@ void CoupLegaux::move(int index, char couleur)
             i++;
         }
         i--;
-        std::get <0> (this->_dernierCoup).first = std::get <0> (this->_coupParPieceNoir[i]).first;
-        std::get <0> (this->_dernierCoup).second = std::get <0> (this->_coupParPieceNoir[i]).second;
-        std::get <1> (this->_dernierCoup).first = this->_coupLegauxNoir[index].first;
-        std::get <1> (this->_dernierCoup).second = this->_coupLegauxNoir[index].second;
-        std::get <2> (this->_dernierCoup) = std::get <2> (this->_coupParPieceNoir[i]);
-        std::get <3> (this->_dernierCoup) = false;
+        this->_dernierCoup.posIni.first = std::get <0> (this->_coupParPieceNoir[i]).first;
+        this->_dernierCoup.posIni.second = std::get <0> (this->_coupParPieceNoir[i]).second;
+        this->_dernierCoup.posFin.first = this->_coupLegauxNoir[index].first;
+        this->_dernierCoup.posFin.second = this->_coupLegauxNoir[index].second;
+        this->_dernierCoup.piece = std::get <2> (this->_coupParPieceNoir[i]);
+        this->_dernierCoup.couleur = 'n';
         bool verif;
-        verif = this->_echiquier.move(std::get <2> (this->_dernierCoup) 
-                                    , std::get <0> (this->_dernierCoup).first
-                                    , std::get <0> (this->_dernierCoup).second
-                                    , std::get <1> (this->_dernierCoup).first
-                                    , std::get <1> (this->_dernierCoup).second);
+        verif = this->_echiquier.move(this->_dernierCoup.piece 
+                                    , this->_dernierCoup.posIni.first
+                                    , this->_dernierCoup.posIni.second
+                                    , this->_dernierCoup.posFin.first
+                                    , this->_dernierCoup.posFin.second);
         assert(verif);
     }
 }

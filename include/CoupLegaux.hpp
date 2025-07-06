@@ -11,7 +11,13 @@ std::vector<std::pair<int, int>> _coupLegauxBlanc;
 std::vector<std::pair<int, int>> _coupLegauxNoir;
 std::vector<std::tuple<std::pair<int, int>, int, char>> _coupParPieceBlanc;
 std::vector<std::tuple<std::pair<int, int>, int, char>> _coupParPieceNoir;
-std::tuple<std::pair<int, int>, std::pair<int, int>, char, bool> _dernierCoup;
+struct dernierCoup {
+    std::pair<int, int> posIni;
+    std::pair<int, int> posFin;
+    char piece;
+    char couleur;
+};
+dernierCoup _dernierCoup;
 
 public:
 CoupLegaux();
@@ -24,6 +30,7 @@ std::vector<std::pair<int, int>> getCoupFou(int, int, char) const;
 std::vector<std::pair<int, int>> getCoupDame(int, int, char) const;
 std::vector<std::pair<int, int>> getCoupRoi(int, int, char) const;
 std::vector<std::pair<int, int>> getCoupPion(int, int, char) const;
+std::vector<size_t> getEchec();
 
 void move(int index, char couleur);
 };
