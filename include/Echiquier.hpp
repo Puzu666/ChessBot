@@ -1,23 +1,32 @@
 #ifndef ECHIQUIER_HPP
 #define ECHIQUIER_HPP
 #include <cstdint>
+#include "Piece.hpp"
 
 class Echiquier{
 private:
-char _plateau[8][8]={
-        {'T','P','v','v','v','v','p','t'},
-        {'C','P','v','v','v','v','p','c'},
-        {'F','P','v','v','v','v','p','f'},
-        {'D','P','v','v','v','v','p','d'},
-        {'R','P','v','v','v','v','p','r'},
-        {'F','P','v','v','v','v','p','f'},
-        {'C','P','v','v','v','v','p','c'},
-        {'T','P','v','v','v','v','p','t'}
-    };
+Piece _plateau[8][8] = {
+    {Piece::Type::TOUR_BLANC, Piece::Type::PION_BLANC, Piece::Type::VIDE, Piece::Type::VIDE, 
+        Piece::Type::VIDE, Piece::Type::VIDE, Piece::Type::PION_NOIR, Piece::Type::TOUR_NOIR},
+    {Piece::Type::CAVALIER_BLANC, Piece::Type::PION_BLANC, Piece::Type::VIDE, Piece::Type::VIDE, 
+        Piece::Type::VIDE, Piece::Type::VIDE, Piece::Type::PION_NOIR, Piece::Type::CAVALIER_NOIR},
+    {Piece::Type::FOU_BLANC, Piece::Type::PION_BLANC, Piece::Type::VIDE, Piece::Type::VIDE, 
+        Piece::Type::VIDE, Piece::Type::VIDE, Piece::Type::PION_NOIR, Piece::Type::FOU_NOIR},
+    {Piece::Type::DAME_BLANC, Piece::Type::PION_BLANC, Piece::Type::VIDE, Piece::Type::VIDE, 
+        Piece::Type::VIDE, Piece::Type::VIDE, Piece::Type::PION_NOIR, Piece::Type::DAME_NOIR},
+    {Piece::Type::ROI_BLANC, Piece::Type::PION_BLANC, Piece::Type::VIDE, Piece::Type::VIDE, 
+        Piece::Type::VIDE, Piece::Type::VIDE, Piece::Type::PION_NOIR, Piece::Type::ROI_NOIR},
+    {Piece::Type::FOU_BLANC, Piece::Type::PION_BLANC, Piece::Type::VIDE, Piece::Type::VIDE, 
+        Piece::Type::VIDE, Piece::Type::VIDE, Piece::Type::PION_NOIR, Piece::Type::FOU_NOIR},
+    {Piece::Type::CAVALIER_BLANC, Piece::Type::PION_BLANC, Piece::Type::VIDE, Piece::Type::VIDE, 
+        Piece::Type::VIDE, Piece::Type::VIDE, Piece::Type::PION_NOIR, Piece::Type::CAVALIER_NOIR},
+    {Piece::Type::TOUR_BLANC, Piece::Type::PION_BLANC, Piece::Type::VIDE, Piece::Type::VIDE, 
+        Piece::Type::VIDE, Piece::Type::VIDE, Piece::Type::PION_NOIR, Piece::Type::TOUR_NOIR},
+};
 
 public:
 Echiquier();
-constexpr char getCase(int lettre, int numero) const
+constexpr Piece getCase(int lettre, int numero) const
 {
     return this->_plateau[lettre][numero];
 }

@@ -3,12 +3,13 @@
 
 CoupLegaux::CoupLegaux()
 {
-    this->_dernierCoup.posIni.first = -1;
-    this->_dernierCoup.posIni.second = -1;
-    this->_dernierCoup.posFin.first = -1;
-    this->_dernierCoup.posFin.second = -1;
-    this->_dernierCoup.piece = 'v';
+    this->_dernierCoup.posIni.lettre = -1;
+    this->_dernierCoup.posIni.numero = -1;
+    this->_dernierCoup.posFin.lettre = -1;
+    this->_dernierCoup.posFin.numero = -1;
+    this->_dernierCoup.piece.type = Piece::Type::VIDE;
     this->_dernierCoup.couleur = 'n';
+    this->_dernierCoup.promotion.type = Piece::Type::VIDE;
 }
 
 //true==blanc; false==noir
@@ -17,8 +18,6 @@ void CoupLegaux::allCoupLegaux(bool couleur)
     char pieceTemp;
     this->_coupLegauxBlanc.clear();
     this->_coupLegauxNoir.clear();
-    this->_coupParPieceBlanc.clear();
-    this->_coupParPieceNoir.clear();
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
             pieceTemp = this->_echiquier.getCase(i, j);
@@ -165,10 +164,15 @@ void CoupLegaux::getCoupPiece(int lettre, int numero, char pieceTemp)
     }
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupCavalier(int lettre, int numero, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupCavalier(int lettre, int numero, char couleur) const
 {
-    std::vector<std::pair<int, int>> coupCavalier;
-    std::pair<int, int> temp;
+    std::vector<Coup> coupCavalier;
+    Coup temp;
+
+    temp.piece = 'C';
+    temp.posIni = {lettre, numero};
+    temp.couleur = couleur;
+
     const std::array<std::pair<int, int>, 8> positions = {
         { 
         { 2, 1 },
@@ -183,29 +187,33 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupCavalier(int lettre, int num
     };
     for(int i = 0; i < 8; i++){
         if(lettre + positions[i].first < 8 && lettre + positions[i].first >= 0 && numero + positions[i].second < 8 && numero + positions[i].second >= 0){
-            temp.first = lettre + positions[i].first;
-            temp.second = numero + positions[i].second;
+            temp.posFin.first = lettre + positions[i].first;
+            temp.posFin.second = numero + positions[i].second;
             coupCavalier.push_back(temp);
         }        
     }
     return coupCavalier;
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupTour(int lettre, int numero, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupTour(int lettre, int numero, char couleur) const
 {
-    std::pair<int, int> temp;
-    std::vector<std::pair<int, int>> coupTour;
+    Coup temp;
+    std::vector<Coup> coupTour;
     
     int i = lettre + 1;
-    temp.second = numero;
+
+    temp.couleur = couleur;
+    temp.piece = 'T';
+    temp.posIni = {lettre, numero};
+    temp.posFin.second = numero;
 
     while(i < 8){
         if(this->_echiquier.getCase(i, numero) != 'T,C,F,D,R,P' && couleur == 'B'){
-            temp.first = i;
+            temp.posFin.first = i;
             coupTour.push_back(temp);
         }
         else if(this->_echiquier.getCase(i, numero) != 't,c,f,d,r,p'){
-            temp.first = i;
+            temp.posFin.first = i;
             coupTour.push_back(temp);
         }
         if(this->_echiquier.getCase(i, numero) !='v'){
@@ -217,11 +225,11 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupTour(int lettre, int numero,
     i = lettre - 1;
     while(i >= 0){
         if(this->_echiquier.getCase(i, numero) != 'T,C,F,D,R,P' && couleur == 'B'){
-            temp.first = i;
+            temp.posFin.first = i;
             coupTour.push_back(temp);
         }
         else if(this->_echiquier.getCase(i, numero) != 't,c,f,d,r,p'){
-            temp.first = i;
+            temp.posFin.first = i;
             coupTour.push_back(temp);
         }
         if(this->_echiquier.getCase(i, numero) !='v'){
@@ -230,15 +238,15 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupTour(int lettre, int numero,
         i--;
     }
 
-    temp.first = lettre;
+    temp.posFin.first = lettre;
     i = numero - 1;
     while(i >= 0){
         if(this->_echiquier.getCase(lettre, i) != 'T,C,F,D,R,P' && couleur == 'B'){
-            temp.second = i;
+            temp.posFin.second = i;
             coupTour.push_back(temp);
         }
         else if(this->_echiquier.getCase(lettre, i) != 't,c,f,d,r,p'){
-            temp.second = i;
+            temp.posFin.second = i;
             coupTour.push_back(temp);
         }
         if(this->_echiquier.getCase(lettre, i) !='v'){
@@ -250,11 +258,11 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupTour(int lettre, int numero,
     i = numero + 1;
     while(i < 8){
         if(this->_echiquier.getCase(lettre, i) != 'T,C,F,D,R,P' && couleur == 'B'){
-            temp.second = i;
+            temp.posFin.second = i;
             coupTour.push_back(temp);
         }
         else if(this->_echiquier.getCase(lettre, i) != 't,c,f,d,r,p'){
-            temp.second = i;
+            temp.posFin.second = i;
             coupTour.push_back(temp);
         }
         if(this->_echiquier.getCase(lettre, i) != 'v'){
@@ -265,15 +273,20 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupTour(int lettre, int numero,
     return coupTour;
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupFou(int lettre, int numero, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupFou(int lettre, int numero, char couleur) const
 {
-    std::pair<int, int> temp;
-    std::vector<std::pair<int, int>> coupFou;
+    Coup temp;
+    std::vector<Coup> coupFou;
+
+    temp.couleur = couleur;
+    temp.piece = 'F';
+    temp.posIni = {lettre, numero};
+
     int i = lettre+1;
     int j = numero+1;
     while(i<8&&j<8){
         if(couleur=='B'&&this->_echiquier.getCase(i,j)!='F,R,T,C,D,P'){
-            temp.first=i;
+            temp.posFinfirst=i;
             temp.second=j;
             coupFou.push_back(temp);       
         }
