@@ -5,22 +5,12 @@ Echiquier::Echiquier()
 {
 }
 
-bool Echiquier::move(char piece, int lettreInitial, int numeroInitial, int lettreFinal, int numeroFinal)
+bool Echiquier::move(Piece piece, Coord coordIni, Coord coordFin)
 {
-    if(this->_plateau[lettreInitial][numeroInitial]==piece){
-        this->_plateau[lettreInitial][numeroInitial]='v';
-        this->_plateau[lettreFinal][numeroFinal]==piece;
+    if(this->_plateau[coordIni.lettre][coordIni.numero].type == piece.type){
+        this->_plateau[coordIni.lettre][coordIni.numero].type = Piece::Type::VIDE;
+        this->_plateau[coordFin.lettre][coordFin.numero].type == piece.type;
         return true;
     }
     return false;
-}
-
-void Echiquier::printEchiquier() const
-{
-    for(int i=7;i>=0;i--){
-        for(int j=0; j<8; j++){
-            std::cout<<this->_plateau[j][i];
-        }
-        std::cout<<std::endl;
-    }
 }

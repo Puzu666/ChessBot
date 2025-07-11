@@ -1,6 +1,7 @@
 #ifndef ECHIQUIER_HPP
 #define ECHIQUIER_HPP
 #include <cstdint>
+#include "Coord.hpp"
 #include "Piece.hpp"
 
 class Echiquier{
@@ -26,14 +27,12 @@ Piece _plateau[8][8] = {
 
 public:
 Echiquier();
-constexpr Piece getCase(int lettre, int numero) const
+constexpr Piece getCase(Coord coordonnee) const
 {
-    return this->_plateau[lettre][numero];
+    return this->_plateau[coordonnee.lettre][coordonnee.numero];
 }
 
-bool move(char piece, int lettreInitial, int numeroInitial, int lettreFinal, int numeroFinal);
-//Pour debuger, à retirer une fois le programme terminé
-void printEchiquier() const;
+bool move(Piece piece, Coord coordIni, Coord coordFin);
 };
 
 #endif

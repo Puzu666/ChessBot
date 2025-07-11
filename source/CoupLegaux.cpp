@@ -1,5 +1,6 @@
 #include "CoupLegaux.hpp"
 #include <cassert>
+#include <array>
 
 CoupLegaux::CoupLegaux()
 {
@@ -15,24 +16,20 @@ CoupLegaux::CoupLegaux()
 //true==blanc; false==noir
 void CoupLegaux::allCoupLegaux(bool couleur)
 {
-    char pieceTemp;
+    Piece pieceTemp;
+    Coord coordtemp;
     this->_coupLegauxBlanc.clear();
     this->_coupLegauxNoir.clear();
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
-            pieceTemp = this->_echiquier.getCase(i, j);
-            getCoupPiece(i, j, pieceTemp);
+            coordtemp = {i, j};
+            pieceTemp = this->_echiquier.getCase(coordtemp);
+            getCoupPiece(coordtemp, pieceTemp);
         }
-    }
-    if(couleur){
-
-    }
-    else{
-        
     }
 }
 
-void CoupLegaux::getCoupPiece(int lettre, int numero, char pieceTemp)
+void CoupLegaux::getCoupPiece(Coord coordonnee, Piece pieceTemp)
 {
     std::vector<std::pair<int, int>> temp;
     std::tuple<std::pair<int, int>, int, char> coupParPieceTemp;
@@ -164,16 +161,16 @@ void CoupLegaux::getCoupPiece(int lettre, int numero, char pieceTemp)
     }
 }
 
-std::vector<Coup> CoupLegaux::getCoupCavalier(int lettre, int numero, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupCavalier(Coord coordonnee, Piece piece) const
 {
     std::vector<Coup> coupCavalier;
-    Coup temp;
+    Coup coupTemp;
 
-    temp.piece = 'C';
-    temp.posIni = {lettre, numero};
-    temp.couleur = couleur;
+    coupTemp.piece.type = piece.type;
+    coupTemp.posIni = coordonnee;
+    coupTemp.couleur = piece.couleur();
 
-    const std::array<std::pair<int, int>, 8> positions = {
+    const std::array<Coord, 8> positions = {
         { 
         { 2, 1 },
         { 2, -1 },
@@ -186,16 +183,16 @@ std::vector<Coup> CoupLegaux::getCoupCavalier(int lettre, int numero, char coule
         }
     };
     for(int i = 0; i < 8; i++){
-        if(lettre + positions[i].first < 8 && lettre + positions[i].first >= 0 && numero + positions[i].second < 8 && numero + positions[i].second >= 0){
-            temp.posFin.first = lettre + positions[i].first;
-            temp.posFin.second = numero + positions[i].second;
-            coupCavalier.push_back(temp);
+        if(coordonnee.lettre + positions[i].lettre < 8 && coordonnee.lettre + positions[i].lettre >= 0 && 
+            coordonnee.numero + positions[i].numero < 8 && coordonnee.numero + positions[i].numero >= 0){
+            coupTemp.posFin = coordonnee + positions[i];
+            coupCavalier.push_back(coupTemp);
         }        
     }
     return coupCavalier;
 }
 
-std::vector<Coup> CoupLegaux::getCoupTour(int lettre, int numero, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupTour(Coord, char couleur) const
 {
     Coup temp;
     std::vector<Coup> coupTour;
@@ -273,7 +270,7 @@ std::vector<Coup> CoupLegaux::getCoupTour(int lettre, int numero, char couleur) 
     return coupTour;
 }
 
-std::vector<Coup> CoupLegaux::getCoupFou(int lettre, int numero, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupFou(Coord, char couleur) const
 {
     Coup temp;
     std::vector<Coup> coupFou;
@@ -364,7 +361,7 @@ std::vector<Coup> CoupLegaux::getCoupFou(int lettre, int numero, char couleur) c
     return coupFou;
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupDame(int lettre, int numero, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupDame(Coord, char couleur) const
 {
     std::vector<std::pair<int, int>> coupDame;
     std::vector<std::pair<int, int>> temp;
@@ -374,7 +371,7 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupDame(int lettre, int numero,
     return coupDame;
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupRoi(int lettre, int numero, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupRoi(Coord, char couleur) const
 {
     std::pair<int, int> temp;
     std::vector<std::pair<int, int>> coupRoi;
@@ -407,7 +404,7 @@ std::vector<std::pair<int, int>> CoupLegaux::getCoupRoi(int lettre, int numero, 
     return coupRoi;
 }
 
-std::vector<std::pair<int, int>> CoupLegaux::getCoupPion(int lettre, int numero, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupPion(Coord, char couleur) const
 {
     std::pair<int, int> temp;
     std::vector<std::pair<int, int>> coupPion;

@@ -1,5 +1,6 @@
 #ifndef COORD_H
 #define COORD_H
+#include <cassert>
 
 struct Coord{
     int lettre;
@@ -10,6 +11,17 @@ struct Coord{
                 coordonnee.lettre >= 0 &&
                 coordonnee.numero < 8 &&
                 coordonnee.numero >= 0);
+    }
+
+    constexpr Coord operator+(const Coord& coordonnee) const{
+        Coord coordTemp = {
+        this->lettre + coordonnee.lettre,
+        this->numero + coordonnee.numero
+        };
+
+        assert(estValide(coordTemp));
+
+        return coordTemp;
     }
 };
 
