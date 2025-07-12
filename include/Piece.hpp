@@ -22,7 +22,11 @@ struct Piece{
     Type type;
 
     // si le 8e bit est à 1, alors c'est noir
-    constexpr bool couleur() { return bool(int(this->type) & 8); }
+    constexpr char couleur() const{ 
+      if(this->type != Piece::Type::VIDE)
+      return bool(int(this->type) & 8) ? 'B' : 'n';
+      return 'v';
+      }
 
     constexpr bool estMemeCouleur(Piece piece) {
       return (this->couleur() == piece.couleur());

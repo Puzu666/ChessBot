@@ -12,6 +12,10 @@ std::vector<Coup> _coupLegauxBlanc;
 std::vector<Coup> _coupLegauxNoir;
 Coup _dernierCoup;
 
+constexpr bool _verifCase(Coord coordonnee, Piece piece) const{
+    return this->_echiquier.getCase(coordonnee).couleur() != piece.couleur();
+}
+
 public:
 CoupLegaux();
 void allCoupLegaux(bool);
@@ -24,7 +28,7 @@ std::vector<Coup> getCoupDame(Coord, Piece) const;
 std::vector<Coup> getCoupRoi(Coord, Piece) const;
 std::vector<Coup> getCoupPion(Coord, Piece) const;
 
-void move(int index, char couleur);
+// void move(int index, char couleur);
 };
 
 #endif

@@ -9,7 +9,6 @@ CoupLegaux::CoupLegaux()
     this->_dernierCoup.posFin.lettre = -1;
     this->_dernierCoup.posFin.numero = -1;
     this->_dernierCoup.piece.type = Piece::Type::VIDE;
-    this->_dernierCoup.couleur = 'n';
     this->_dernierCoup.promotion.type = Piece::Type::VIDE;
 }
 
@@ -31,134 +30,6 @@ void CoupLegaux::allCoupLegaux(bool couleur)
 
 void CoupLegaux::getCoupPiece(Coord coordonnee, Piece pieceTemp)
 {
-    std::vector<std::pair<int, int>> temp;
-    std::tuple<std::pair<int, int>, int, char> coupParPieceTemp;
-    size_t tailleVectorBlanc = 0;
-    size_t tailleVectorNoir = 0;
-    switch(pieceTemp){
-        case 'v':
-        break;
-        case 'C':
-        temp = getCoupCavalier(lettre, numero, 'B');
-        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
-        std::get<2>(coupParPieceTemp) = 'C';
-        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
-        tailleVectorBlanc = this->_coupLegauxBlanc.size();
-        break;
-        case 'c':
-        temp = getCoupCavalier(lettre, numero, 'n');
-        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
-        std::get<2>(coupParPieceTemp) = 'C';
-        this->_coupParPieceNoir.push_back(coupParPieceTemp);
-        tailleVectorNoir = this->_coupLegauxNoir.size();
-        break;
-        case 'T':
-        temp = getCoupTour(lettre, numero, 'B');
-        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
-        std::get<2>(coupParPieceTemp) = 'T';
-        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
-        tailleVectorBlanc = this->_coupLegauxBlanc.size();
-        break;
-        case 't':
-        temp = getCoupTour(lettre, numero, 'n');
-        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
-        std::get<2>(coupParPieceTemp) = 'T';
-        this->_coupParPieceNoir.push_back(coupParPieceTemp);
-        tailleVectorNoir = this->_coupLegauxNoir.size();
-        break;
-        case 'F':
-        temp = getCoupFou(lettre, numero, 'B');
-        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
-        std::get<2>(coupParPieceTemp) = 'F';
-        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
-        tailleVectorBlanc = this->_coupLegauxBlanc.size();
-        break;
-        case 'f':
-        temp = getCoupFou(lettre, numero, 'n');
-        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
-        std::get<2>(coupParPieceTemp) = 'F';
-        this->_coupParPieceNoir.push_back(coupParPieceTemp);
-        tailleVectorNoir = this->_coupLegauxNoir.size();
-        break;
-        case 'D':
-        temp = getCoupDame(lettre, numero, 'B');
-        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
-        std::get<2>(coupParPieceTemp) = 'D';
-        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
-        tailleVectorBlanc = this->_coupLegauxBlanc.size();
-        break;
-        case 'd':
-        temp = getCoupDame(lettre, numero, 'n');
-        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
-        std::get<2>(coupParPieceTemp) = 'D';
-        this->_coupParPieceNoir.push_back(coupParPieceTemp);
-        tailleVectorNoir = this->_coupLegauxNoir.size();
-        break;
-        case 'P':
-        temp = getCoupPion(lettre, numero, 'B');
-        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
-        std::get<2>(coupParPieceTemp) = 'P';
-        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
-        tailleVectorBlanc = this->_coupLegauxBlanc.size();
-        break;
-        case 'p':
-        temp = getCoupPion(lettre, numero, 'n');
-        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
-        std::get<2>(coupParPieceTemp) = 'P';
-        this->_coupParPieceNoir.push_back(coupParPieceTemp);
-        tailleVectorNoir = this->_coupLegauxNoir.size();
-        break;
-        case 'R':
-        temp = getCoupRoi(lettre, numero, 'B');
-        this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxBlanc.size()-tailleVectorBlanc;
-        std::get<2>(coupParPieceTemp) = 'R';
-        this->_coupParPieceBlanc.push_back(coupParPieceTemp);
-        tailleVectorBlanc = this->_coupLegauxBlanc.size();
-        break;
-        case 'r':
-        temp = getCoupRoi(lettre, numero, 'n');
-        this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), temp.begin(), temp.end());
-        std::get<0>(coupParPieceTemp).first = lettre;
-        std::get<0>(coupParPieceTemp).second = numero;
-        std::get<1>(coupParPieceTemp) = this->_coupLegauxNoir.size()-tailleVectorNoir;
-        std::get<2>(coupParPieceTemp) = 'R';
-        this->_coupParPieceNoir.push_back(coupParPieceTemp);
-        tailleVectorNoir = this->_coupLegauxNoir.size();
-        break;
-    }
 }
 
 std::vector<Coup> CoupLegaux::getCoupCavalier(Coord coordonnee, Piece piece) const
@@ -168,7 +39,7 @@ std::vector<Coup> CoupLegaux::getCoupCavalier(Coord coordonnee, Piece piece) con
 
     coupTemp.piece.type = piece.type;
     coupTemp.posIni = coordonnee;
-    coupTemp.couleur = piece.couleur();
+    coupTemp.piece = piece;
 
     const std::array<Coord, 8> positions = {
         { 
@@ -183,219 +54,171 @@ std::vector<Coup> CoupLegaux::getCoupCavalier(Coord coordonnee, Piece piece) con
         }
     };
     for(int i = 0; i < 8; i++){
-        if(coordonnee.lettre + positions[i].lettre < 8 && coordonnee.lettre + positions[i].lettre >= 0 && 
-            coordonnee.numero + positions[i].numero < 8 && coordonnee.numero + positions[i].numero >= 0){
-            coupTemp.posFin = coordonnee + positions[i];
-            coupCavalier.push_back(coupTemp);
+        if((coordonnee + positions[i]).estValide()) {
+            if(this->_verifCase(coordonnee + positions[i], piece)){
+                coupTemp.posFin = coordonnee + positions[i];
+                coupCavalier.push_back(coupTemp);
+            }
         }        
     }
     return coupCavalier;
 }
 
-std::vector<Coup> CoupLegaux::getCoupTour(Coord, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupTour(Coord coordonnee, Piece piece) const
 {
-    Coup temp;
+    Coup coupTemp;
     std::vector<Coup> coupTour;
+    Coord tempCoord;
     
-    int i = lettre + 1;
+    coupTemp.piece = piece;
+    coupTemp.posIni = coordonnee;
+    coupTemp.posFin.numero = coordonnee.numero;
+    tempCoord = {coupTemp.posFin.lettre+1, coupTemp.posFin.numero};
 
-    temp.couleur = couleur;
-    temp.piece = 'T';
-    temp.posIni = {lettre, numero};
-    temp.posFin.second = numero;
-
-    while(i < 8){
-        if(this->_echiquier.getCase(i, numero) != 'T,C,F,D,R,P' && couleur == 'B'){
-            temp.posFin.first = i;
-            coupTour.push_back(temp);
+    while(tempCoord.estValide()){
+        if(this->_verifCase(tempCoord, piece)){
+            coupTemp.posFin.lettre = tempCoord.lettre;
+            coupTour.push_back(coupTemp);
         }
-        else if(this->_echiquier.getCase(i, numero) != 't,c,f,d,r,p'){
-            temp.posFin.first = i;
-            coupTour.push_back(temp);
-        }
-        if(this->_echiquier.getCase(i, numero) !='v'){
+        if(this->_echiquier.getCase(tempCoord).couleur() != 'v'){
             break;
         }
-        i++;
+        tempCoord.lettre++;
     }
 
-    i = lettre - 1;
-    while(i >= 0){
-        if(this->_echiquier.getCase(i, numero) != 'T,C,F,D,R,P' && couleur == 'B'){
-            temp.posFin.first = i;
-            coupTour.push_back(temp);
+    tempCoord.lettre = coordonnee.lettre - 1;
+    while(tempCoord.estValide()){
+        if(this->_verifCase(tempCoord, piece)){
+            coupTemp.posFin.lettre = tempCoord.lettre;
+            coupTour.push_back(coupTemp);
         }
-        else if(this->_echiquier.getCase(i, numero) != 't,c,f,d,r,p'){
-            temp.posFin.first = i;
-            coupTour.push_back(temp);
-        }
-        if(this->_echiquier.getCase(i, numero) !='v'){
+        if(this->_echiquier.getCase(tempCoord).couleur() != 'v'){
             break;
         }
-        i--;
+        tempCoord.lettre--;
     }
 
-    temp.posFin.first = lettre;
-    i = numero - 1;
-    while(i >= 0){
-        if(this->_echiquier.getCase(lettre, i) != 'T,C,F,D,R,P' && couleur == 'B'){
-            temp.posFin.second = i;
-            coupTour.push_back(temp);
+    tempCoord = { coordonnee.lettre, coordonnee.numero - 1 };
+    while(tempCoord.estValide()){
+        if(this->_verifCase(tempCoord, piece)){
+            coupTemp.posFin.numero = tempCoord.numero;
+            coupTour.push_back(coupTemp);
         }
-        else if(this->_echiquier.getCase(lettre, i) != 't,c,f,d,r,p'){
-            temp.posFin.second = i;
-            coupTour.push_back(temp);
-        }
-        if(this->_echiquier.getCase(lettre, i) !='v'){
+        if(this->_echiquier.getCase(tempCoord).couleur() != 'v'){
             break;
         }
-        i--;
+        tempCoord.numero--;
     }
 
-    i = numero + 1;
-    while(i < 8){
-        if(this->_echiquier.getCase(lettre, i) != 'T,C,F,D,R,P' && couleur == 'B'){
-            temp.posFin.second = i;
-            coupTour.push_back(temp);
+    tempCoord.numero = coordonnee.numero + 1;
+    while(tempCoord.estValide()){
+        if(this->_echiquier.getCase(tempCoord).couleur() != piece.couleur()){
+            coupTemp.posFin.numero = tempCoord.numero;
+            coupTour.push_back(coupTemp);
         }
-        else if(this->_echiquier.getCase(lettre, i) != 't,c,f,d,r,p'){
-            temp.posFin.second = i;
-            coupTour.push_back(temp);
-        }
-        if(this->_echiquier.getCase(lettre, i) != 'v'){
+        if(this->_echiquier.getCase(tempCoord).couleur() != 'v'){
             break;
         }
-        i--;
+        tempCoord.numero++;
     }
     return coupTour;
 }
 
-std::vector<Coup> CoupLegaux::getCoupFou(Coord, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupFou(Coord coordonnee, Piece piece) const
 {
-    Coup temp;
+    Coup coupTemp;
     std::vector<Coup> coupFou;
 
-    temp.couleur = couleur;
-    temp.piece = 'F';
-    temp.posIni = {lettre, numero};
+    coupTemp.piece = piece;
+    coupTemp.posIni = { coordonnee.lettre, coordonnee.numero };
 
-    int i = lettre+1;
-    int j = numero+1;
-    while(i<8&&j<8){
-        if(couleur=='B'&&this->_echiquier.getCase(i,j)!='F,R,T,C,D,P'){
-            temp.posFinfirst=i;
-            temp.second=j;
-            coupFou.push_back(temp);       
+    Coord tempCoord = { coupTemp.posIni.lettre + 1, coupTemp.posIni.numero + 1 };
+    while(tempCoord.estValide()){
+        if(this->_verifCase(tempCoord, piece)){
+            coupTemp.posFin = tempCoord;
+            coupFou.push_back(coupTemp);       
         }
-        else if(this->_echiquier.getCase(i,j)!='f,r,t,c,d,p'){
-            temp.first=i;
-            temp.second=j;
-            coupFou.push_back(temp);
-        }
-        if(this->_echiquier.getCase(i,j)!='v'){
+        if(this->_echiquier.getCase(tempCoord).couleur() != 'v'){
             break;
         }
-        i++;
-        j++;
+        tempCoord.lettre++;
+        tempCoord.numero++;
     }
 
-    int i = lettre+1;
-    int j = numero-1;
-    while(i<8&&j>=0){
-        if(couleur=='B'&&this->_echiquier.getCase(i,j)!='F,R,T,C,D,P'){
-            temp.first=i;
-            temp.second=j;
-            coupFou.push_back(temp);       
+    Coord tempCoord = { coupTemp.posIni.lettre + 1, coupTemp.posIni.numero - 1 };
+    while(tempCoord.estValide()){
+        if(this->_verifCase(tempCoord, piece)){
+            coupTemp.posFin = tempCoord;
+            coupFou.push_back(coupTemp);       
         }
-        else if(this->_echiquier.getCase(i,j)!='f,r,t,c,d,p'){
-            temp.first=i;
-            temp.second=j;
-            coupFou.push_back(temp);
-        }
-        if(this->_echiquier.getCase(i,j)!='v'){
+        if(this->_echiquier.getCase(tempCoord).couleur() != 'v'){
             break;
         }
-        i++;
-        j++;
+        tempCoord.lettre++;
+        tempCoord.numero--;
     }
 
-    int i = lettre-1;
-    int j = numero+1;
-    while(i>=0&&j<8){
-        if(couleur=='B'&&this->_echiquier.getCase(i,j)!='F,R,T,C,D,P'){
-            temp.first=i;
-            temp.second=j;
-            coupFou.push_back(temp);       
+    Coord tempCoord = { coupTemp.posIni.lettre - 1, coupTemp.posIni.numero + 1 };
+    while(tempCoord.estValide()){
+        if(this->_verifCase(tempCoord, piece)){
+            coupTemp.posFin = tempCoord;
+            coupFou.push_back(coupTemp);       
         }
-        else if(this->_echiquier.getCase(i,j)!='f,r,t,c,d,p'){
-            temp.first=i;
-            temp.second=j;
-            coupFou.push_back(temp);
-        }
-        if(this->_echiquier.getCase(i,j)!='v'){
+        if(this->_echiquier.getCase(tempCoord).couleur() != 'v'){
             break;
         }
-        i++;
-        j++;
+        tempCoord.lettre--;
+        tempCoord.numero++;
     }
 
-    int i = lettre-1;
-    int j = numero-1;
-    while(i>=0&&j>=0){
-        if(couleur=='B'&&this->_echiquier.getCase(i,j)!='F,R,T,C,D,P'){
-            temp.first=i;
-            temp.second=j;
-            coupFou.push_back(temp);       
+    Coord tempCoord = { coupTemp.posIni.lettre - 1, coupTemp.posIni.numero - 1 };
+    while(tempCoord.estValide()){
+        if(this->_verifCase(tempCoord, piece)){
+            coupTemp.posFin = tempCoord;
+            coupFou.push_back(coupTemp);       
         }
-        else if(this->_echiquier.getCase(i,j)!='f,r,t,c,d,p'){
-            temp.first=i;
-            temp.second=j;
-            coupFou.push_back(temp);
-        }
-        if(this->_echiquier.getCase(i,j)!='v'){
+        if(this->_echiquier.getCase(tempCoord).couleur() != 'v'){
             break;
         }
-        i++;
-        j++;
+        tempCoord.lettre--;
+        tempCoord.numero--;
     }
     return coupFou;
 }
 
-std::vector<Coup> CoupLegaux::getCoupDame(Coord, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupDame(Coord coordonnee, Piece piece) const
 {
-    std::vector<std::pair<int, int>> coupDame;
-    std::vector<std::pair<int, int>> temp;
-    coupDame = getCoupTour(lettre, numero, couleur);
-    temp = getCoupFou(lettre, numero, couleur);
+    std::vector<Coup> coupDame;
+    std::vector<Coup> temp;
+    coupDame = getCoupTour(coordonnee, piece);
+    temp = getCoupFou(coordonnee, piece);
     coupDame.insert(coupDame.end(), temp.begin(), temp.end());
     return coupDame;
 }
 
-std::vector<Coup> CoupLegaux::getCoupRoi(Coord, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupRoi(Coord coordonnee, Piece piece) const
 {
-    std::pair<int, int> temp;
-    std::vector<std::pair<int, int>> coupRoi;
+    Coup coupTemp;
+    std::vector<Coup> coupRoi;
+    Coord tempCoord = { coordonnee.lettre - 1, coordonnee.numero - 1 };
 
-    if(couleur=='B'){
-        for(int i=lettre-1; i<lettre+2; i++){
-            for(int j=numero-1; j<numero+2; j++){
-                if(i>=0&&i<8&&j>=0&&j<8&&this->_echiquier.getCase(i,j)!='F,D,T,C,P'){
-                    temp.first=i;
-                    temp.second=j;
-                    if(i!=lettre||j!=numero)
-                    coupRoi.push_back(temp);
+    coupTemp.piece = piece;
+    coupTemp.posIni = coordonnee;
+
+    if(piece.couleur()=='B'){
+        for(tempCoord.lettre; tempCoord.lettre < tempCoord.lettre + 3; tempCoord.lettre++){
+            for(tempCoord.numero; tempCoord.numero < tempCoord.numero + 3; tempCoord.numero++){
+                if(tempCoord.estValide()){
+                    if(this->_verifCase(coordonnee, piece)) { coupRoi.push_back(coupTemp); }                        
                 }
             }
         }
     }
     else{
-        for(int i=lettre-1; i<lettre+2; i++){
-            for(int j=numero-1; j<numero+2; j++){
-                if(i>=0&&i<8&&j>=0&&j<8&&this->_echiquier.getCase(i,j)!='f,d,t,c,p'){
-                    temp.first=i;
-                    temp.second=j;
-                    if(i!=lettre||j!=numero)
-                    coupRoi.push_back(temp);
+        for(tempCoord.lettre; tempCoord.lettre < tempCoord.lettre + 3; tempCoord.lettre++){
+            for(tempCoord.numero; tempCoord.numero < tempCoord.numero + 3; tempCoord.numero++){
+                if(tempCoord.estValide()){
+                    if(this->_verifCase(coordonnee, piece)) { coupRoi.push_back(coupTemp); }
                 }
             }
         }
@@ -404,82 +227,91 @@ std::vector<Coup> CoupLegaux::getCoupRoi(Coord, char couleur) const
     return coupRoi;
 }
 
-std::vector<Coup> CoupLegaux::getCoupPion(Coord, char couleur) const
+std::vector<Coup> CoupLegaux::getCoupPion(Coord coordonnee, Piece piece) const
 {
-    std::pair<int, int> temp;
-    std::vector<std::pair<int, int>> coupPion;
-    if(couleur=='B'||couleur=='b'){
-        if(this->_echiquier.getCase(lettre, numero+1)=='v'){
-            temp.first=lettre;
-            temp.second=numero+1;
-            coupPion.push_back(temp);
-            if(numero==1&&this->_echiquier.getCase(lettre, numero+2)=='v'){
-                temp.second++;
-                coupPion.push_back(temp);
+    Coup coupTemp;
+    std::vector<Coup> coupPion;
+    Coord tempCoord = { coordonnee.lettre, coordonnee.numero + 1 };
+
+    coupTemp.piece = piece;
+    coupTemp.posIni = coordonnee;
+
+    if(piece.couleur() == 'B'){
+        if(this->_echiquier.getCase(tempCoord).couleur() == 'v'){
+            coupTemp.posFin = tempCoord;
+            coupPion.push_back(coupTemp);
+            tempCoord.numero++;
+            if(coordonnee.numero == 1 && this->_echiquier.getCase(tempCoord).couleur() == 'v'){
+                coupTemp.posFin.numero++;
+                coupPion.push_back(coupTemp);
             }
         }
-        if(lettre!=0){
-            if(this->_echiquier.getCase(lettre-1, numero+1)=='p,d,t,f,c'){
-                temp.first=lettre-1;
-                temp.second=numero+1;
-                coupPion.push_back(temp);
+
+        tempCoord = { coordonnee.lettre - 1, coordonnee.numero + 1};
+        if(tempCoord.estValide()){
+            if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
+                coupTemp.posFin = tempCoord;
+                coupPion.push_back(coupTemp);
             }
         }
-        if (lettre!=7){
-            if(this->_echiquier.getCase(lettre+1, numero+1)=='p,d,t,f,c'){
-                temp.first=lettre+1;
-                temp.second=numero+1;
-                coupPion.push_back(temp);
+
+        tempCoord = { coordonnee.lettre + 1, coordonnee.numero + 1};
+        if(tempCoord.estValide()){
+            if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
+                coupTemp.posFin = tempCoord;
+                coupPion.push_back(coupTemp);
             }
         }
-        if (numero == 5 && this->_dernierCoup.piece == 'P' 
-            && this->_dernierCoup.couleur!='B' 
-            && this->_dernierCoup.posIni.first == 7
-            && this->_dernierCoup.posFin.first == 5
-            && (this->_dernierCoup.posFin.second == lettre - 1 || this->_dernierCoup.posFin.second == lettre + 1)){
-                temp.first = this->_dernierCoup.posFin.first;
-                temp.second = this->_dernierCoup.posFin.second + 1;
-                coupPion.push_back(temp);
+
+        if (coordonnee.numero == 5 && this->_dernierCoup.piece.type == Piece::Type::PION_NOIR
+            && this->_dernierCoup.posIni.numero == 7
+            && this->_dernierCoup.posFin.numero == 5
+            && (this->_dernierCoup.posFin.lettre == coordonnee.lettre - 1 || this->_dernierCoup.posFin.lettre == coordonnee.lettre + 1)){
+                tempCoord = { this->_dernierCoup.posFin.lettre, coordonnee.numero + 1 };
+                coupTemp.posFin = tempCoord;
+                coupPion.push_back(coupTemp);
             }
     }
     else{
-        if(this->_echiquier.getCase(lettre, numero-1)=='v'){
-            temp.first=lettre;
-            temp.second=numero-1;
-            coupPion.push_back(temp);
-            if(numero==1&&this->_echiquier.getCase(lettre, numero-2)=='v'){
-                temp.second--;
-                coupPion.push_back(temp);
+        if(this->_echiquier.getCase(tempCoord).couleur() == 'v'){
+            coupTemp.posFin = tempCoord;
+            coupPion.push_back(coupTemp);
+            tempCoord.numero++;
+            if(coordonnee.numero == 1 && this->_echiquier.getCase(tempCoord).couleur() == 'v'){
+                coupTemp.posFin.numero++;
+                coupPion.push_back(coupTemp);
             }
         }
-        if(lettre!=0){
-            if(this->_echiquier.getCase(lettre-1, numero-1)=='P,D,T,F,C'){
-                temp.first=lettre-1;
-                temp.second=numero-1;
-                coupPion.push_back(temp);
+
+        tempCoord = { coordonnee.lettre - 1, coordonnee.numero + 1};
+        if(tempCoord.estValide()){
+            if(this->_echiquier.getCase(tempCoord).couleur() == 'B'){
+                coupTemp.posFin = tempCoord;
+                coupPion.push_back(coupTemp);
             }
         }
-        if (lettre!=7){
-            if(this->_echiquier.getCase(lettre+1, numero-1)=='P,D,T,F,C'){
-                temp.first=lettre+1;
-                temp.second=numero-1;
-                coupPion.push_back(temp);
+
+        tempCoord = { coordonnee.lettre + 1, coordonnee.numero + 1};
+        if(tempCoord.estValide()){
+            if(this->_echiquier.getCase(tempCoord).couleur() == 'B'){
+                coupTemp.posFin = tempCoord;
+                coupPion.push_back(coupTemp);
             }
         }
-        if (numero == 4 && this->_dernierCoup.piece == 'P' 
-            && this->_dernierCoup.couleur!='B' 
-            && this->_dernierCoup.posIni.first == 2
-            && this->_dernierCoup.posFin.first == 4
-            && (this->_dernierCoup.posFin.second == lettre - 1 || this->_dernierCoup.posFin.second == lettre + 1)){
-                temp.first = this->_dernierCoup.posFin.first;
-                temp.second = this->_dernierCoup.posFin.second - 1;
-                coupPion.push_back(temp);
+
+        if (coordonnee.numero == 5 && this->_dernierCoup.piece.type == Piece::Type::PION_BLANC
+            && this->_dernierCoup.posIni.numero == 7
+            && this->_dernierCoup.posFin.numero == 5
+            && (this->_dernierCoup.posFin.lettre == coordonnee.lettre - 1 || this->_dernierCoup.posFin.lettre == coordonnee.lettre + 1)){
+                tempCoord = { this->_dernierCoup.posFin.lettre, coordonnee.numero + 1 };
+                coupTemp.posFin = tempCoord;
+                coupPion.push_back(coupTemp);
             }
     }
     return coupPion;
 }
 
-void CoupLegaux::move(int index, char couleur)
+/*void CoupLegaux::move(int index, char couleur)
 {
     if(couleur == 'B' && index < this->_coupLegauxBlanc.size()){
         int temp = index;
@@ -525,4 +357,4 @@ void CoupLegaux::move(int index, char couleur)
                                     , this->_dernierCoup.posFin.second);
         assert(verif);
     }
-}
+}*/

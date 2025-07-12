@@ -6,20 +6,20 @@ struct Coord{
     int lettre;
     int numero;
 
-    constexpr bool estValide(Coord coordonnee){
-        return (coordonnee.lettre < 8 &&
-                coordonnee.lettre >= 0 &&
-                coordonnee.numero < 8 &&
-                coordonnee.numero >= 0);
+    constexpr bool estValide() const{
+        return (this->lettre < 8 &&
+                this->lettre >= 0 &&
+                this->numero < 8 &&
+                this->numero >= 0);
     }
 
-    constexpr Coord operator+(const Coord& coordonnee) const{
+    Coord operator+(const Coord& coordonnee){
         Coord coordTemp = {
         this->lettre + coordonnee.lettre,
         this->numero + coordonnee.numero
         };
 
-        assert(estValide(coordTemp));
+        assert(coordTemp.estValide());
 
         return coordTemp;
     }

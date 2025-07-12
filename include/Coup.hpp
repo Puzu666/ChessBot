@@ -7,8 +7,8 @@ struct Coup{
     Coord posIni;
     Coord posFin;
     Piece piece;
-    bool couleur;
     Piece promotion;
+
 };
 
 #endif
