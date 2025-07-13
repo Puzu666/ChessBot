@@ -8,7 +8,6 @@ struct Coup{
     Coord posFin;
     Piece piece;
     Piece promotion;
-
 };
 
 #endif

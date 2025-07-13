@@ -27,6 +27,7 @@ std::vector<Coup> getCoupFou(Coord, Piece) const;
 std::vector<Coup> getCoupDame(Coord, Piece) const;
 std::vector<Coup> getCoupRoi(Coord, Piece) const;
 std::vector<Coup> getCoupPion(Coord, Piece) const;
+std::vector<Coup> getCoupPromotion(Coord, Piece) const;
 
 // void move(int index, char couleur);
 };

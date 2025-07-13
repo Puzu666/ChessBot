@@ -31,6 +31,8 @@ struct Piece{
     constexpr bool estMemeCouleur(Piece piece) {
       return (this->couleur() == piece.couleur());
     }
+
+    
 };
 
 #endif

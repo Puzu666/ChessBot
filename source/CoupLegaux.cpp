@@ -21,15 +21,44 @@ void CoupLegaux::allCoupLegaux(bool couleur)
     this->_coupLegauxNoir.clear();
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
-            coordtemp = {i, j};
+            coordtemp = { i, j };
             pieceTemp = this->_echiquier.getCase(coordtemp);
             getCoupPiece(coordtemp, pieceTemp);
         }
     }
 }
 
-void CoupLegaux::getCoupPiece(Coord coordonnee, Piece pieceTemp)
+void CoupLegaux::getCoupPiece(Coord coordonnee, Piece piece)
 {
+    Piece::Type tempType = piece.type;
+    std::vector<Coup> tempCoupVec;
+
+    switch(tempType){
+        case Piece::Type::CAVALIER_BLANC:
+        case Piece::Type::CAVALIER_NOIR:
+        tempCoupVec = getCoupCavalier(coordonnee, piece);
+        break;
+        case Piece::Type::TOUR_BLANC:
+        case Piece::Type::TOUR_NOIR:
+        tempCoupVec = getCoupTour(coordonnee, piece);
+        break;
+        case Piece::Type::DAME_BLANC:
+        case Piece::Type::DAME_NOIR:
+        tempCoupVec = getCoupDame(coordonnee, piece);
+        break;
+        case Piece::Type::FOU_BLANC:
+        case Piece::Type::FOU_NOIR:
+        tempCoupVec = getCoupFou(coordonnee, piece);
+        break;
+        case Piece::Type::ROI_BLANC:
+        case Piece::Type::ROI_NOIR:
+        tempCoupVec = getCoupRoi(coordonnee, piece);
+        break;
+        case Piece::Type::PION_BLANC:
+        case Piece::Type::PION_NOIR:
+        tempCoupVec = getCoupPion(coordonnee, piece);
+        break;
+    }
 }
 
 std::vector<Coup> CoupLegaux::getCoupCavalier(Coord coordonnee, Piece piece) const
@@ -235,80 +264,215 @@ std::vector<Coup> CoupLegaux::getCoupPion(Coord coordonnee, Piece piece) const
 
     coupTemp.piece = piece;
     coupTemp.posIni = coordonnee;
+    coupTemp.promotion.type = Piece::Type::VIDE;
 
-    if(piece.couleur() == 'B'){
-        if(this->_echiquier.getCase(tempCoord).couleur() == 'v'){
-            coupTemp.posFin = tempCoord;
-            coupPion.push_back(coupTemp);
-            tempCoord.numero++;
-            if(coordonnee.numero == 1 && this->_echiquier.getCase(tempCoord).couleur() == 'v'){
-                coupTemp.posFin.numero++;
-                coupPion.push_back(coupTemp);
-            }
-        }
-
-        tempCoord = { coordonnee.lettre - 1, coordonnee.numero + 1};
-        if(tempCoord.estValide()){
-            if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
-                coupTemp.posFin = tempCoord;
-                coupPion.push_back(coupTemp);
-            }
-        }
-
-        tempCoord = { coordonnee.lettre + 1, coordonnee.numero + 1};
-        if(tempCoord.estValide()){
-            if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
-                coupTemp.posFin = tempCoord;
-                coupPion.push_back(coupTemp);
-            }
-        }
-
-        if (coordonnee.numero == 5 && this->_dernierCoup.piece.type == Piece::Type::PION_NOIR
-            && this->_dernierCoup.posIni.numero == 7
-            && this->_dernierCoup.posFin.numero == 5
-            && (this->_dernierCoup.posFin.lettre == coordonnee.lettre - 1 || this->_dernierCoup.posFin.lettre == coordonnee.lettre + 1)){
-                tempCoord = { this->_dernierCoup.posFin.lettre, coordonnee.numero + 1 };
-                coupTemp.posFin = tempCoord;
-                coupPion.push_back(coupTemp);
-            }
+    if((coordonnee.numero == 6 && piece.couleur() == 'B') || (coordonnee.numero == 1 && piece.couleur() == 'n')){
+        coupPion = getCoupPromotion(coordonnee, piece);
     }
     else{
-        if(this->_echiquier.getCase(tempCoord).couleur() == 'v'){
-            coupTemp.posFin = tempCoord;
-            coupPion.push_back(coupTemp);
-            tempCoord.numero++;
-            if(coordonnee.numero == 1 && this->_echiquier.getCase(tempCoord).couleur() == 'v'){
-                coupTemp.posFin.numero++;
-                coupPion.push_back(coupTemp);
-            }
-        }
-
-        tempCoord = { coordonnee.lettre - 1, coordonnee.numero + 1};
-        if(tempCoord.estValide()){
-            if(this->_echiquier.getCase(tempCoord).couleur() == 'B'){
+        if(piece.couleur() == 'B'){        
+            if(this->_echiquier.getCase(tempCoord).couleur() == 'v'){
                 coupTemp.posFin = tempCoord;
                 coupPion.push_back(coupTemp);
+
+                tempCoord.numero++;
+                if(coordonnee.numero == 1 && this->_echiquier.getCase(tempCoord).couleur() == 'v'){
+                    coupTemp.posFin.numero++;
+                    coupPion.push_back(coupTemp);
+                }
+            }
+
+            tempCoord = { coordonnee.lettre - 1, coordonnee.numero + 1};
+            if(tempCoord.estValide()){
+                if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
+                    coupTemp.posFin = tempCoord;
+                    coupPion.push_back(coupTemp);
+                }
+            }
+
+            tempCoord = { coordonnee.lettre + 1, coordonnee.numero + 1};
+            if(tempCoord.estValide()){
+                if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
+                    coupTemp.posFin = tempCoord;
+                    coupPion.push_back(coupTemp);
+                }
+            }
+
+            if (coordonnee.numero == 5 && this->_dernierCoup.piece.type == Piece::Type::PION_NOIR
+                && this->_dernierCoup.posIni.numero == 7
+                && this->_dernierCoup.posFin.numero == 5
+                && (this->_dernierCoup.posFin.lettre == coordonnee.lettre - 1 || this->_dernierCoup.posFin.lettre == coordonnee.lettre + 1)){
+                    tempCoord = { this->_dernierCoup.posFin.lettre, coordonnee.numero + 1 };
+                    coupTemp.posFin = tempCoord;
+                    coupPion.push_back(coupTemp);
             }
         }
-
-        tempCoord = { coordonnee.lettre + 1, coordonnee.numero + 1};
-        if(tempCoord.estValide()){
-            if(this->_echiquier.getCase(tempCoord).couleur() == 'B'){
+        else{
+            if(this->_echiquier.getCase(tempCoord).couleur() == 'v'){
                 coupTemp.posFin = tempCoord;
                 coupPion.push_back(coupTemp);
+                tempCoord.numero++;
+                if(coordonnee.numero == 6 && this->_echiquier.getCase(tempCoord).couleur() == 'v'){
+                    coupTemp.posFin.numero++;
+                    coupPion.push_back(coupTemp);
+                }
+            }
+
+            tempCoord = { coordonnee.lettre - 1, coordonnee.numero + 1};
+            if(tempCoord.estValide()){
+                if(this->_echiquier.getCase(tempCoord).couleur() == 'B'){
+                    coupTemp.posFin = tempCoord;
+                    coupPion.push_back(coupTemp);
+                }
+            }
+
+            tempCoord = { coordonnee.lettre + 1, coordonnee.numero + 1};
+            if(tempCoord.estValide()){
+                if(this->_echiquier.getCase(tempCoord).couleur() == 'B'){
+                    coupTemp.posFin = tempCoord;
+                    coupPion.push_back(coupTemp);
+                }
+            }
+
+            if (coordonnee.numero == 5 && this->_dernierCoup.piece.type == Piece::Type::PION_BLANC
+                && this->_dernierCoup.posIni.numero == 7
+                && this->_dernierCoup.posFin.numero == 5
+                && (this->_dernierCoup.posFin.lettre == coordonnee.lettre - 1 || this->_dernierCoup.posFin.lettre == coordonnee.lettre + 1)){
+                    tempCoord = { this->_dernierCoup.posFin.lettre, coordonnee.numero + 1 };
+                    coupTemp.posFin = tempCoord;
+                    coupPion.push_back(coupTemp);
             }
         }
-
-        if (coordonnee.numero == 5 && this->_dernierCoup.piece.type == Piece::Type::PION_BLANC
-            && this->_dernierCoup.posIni.numero == 7
-            && this->_dernierCoup.posFin.numero == 5
-            && (this->_dernierCoup.posFin.lettre == coordonnee.lettre - 1 || this->_dernierCoup.posFin.lettre == coordonnee.lettre + 1)){
-                tempCoord = { this->_dernierCoup.posFin.lettre, coordonnee.numero + 1 };
-                coupTemp.posFin = tempCoord;
-                coupPion.push_back(coupTemp);
-            }
     }
     return coupPion;
+}
+
+std::vector<Coup> CoupLegaux::getCoupPromotion(Coord coordonnee, Piece piece) const{
+    Coord tempCoord;
+    Coup coupTemp;
+    std::vector<Coup> coupPromotion;
+
+    coupTemp.piece = piece;
+    coupTemp.posIni = coordonnee;
+    
+    
+    Piece::Type pi = Piece::Type::VIDE;
+
+    if(piece.couleur() == 'B'){
+        tempCoord = { coordonnee.lettre, coordonnee.numero + 1 };
+
+        if(this->_echiquier.getCase(tempCoord).type == Piece::Type::VIDE){
+            coupTemp.posFin = tempCoord;
+
+            coupTemp.promotion.type == Piece::Type::DAME_BLANC;
+            coupPromotion.push_back(coupTemp);
+
+            coupTemp.promotion.type == Piece::Type::TOUR_BLANC;
+            coupPromotion.push_back(coupTemp);
+
+            coupTemp.promotion.type == Piece::Type::FOU_BLANC;
+            coupPromotion.push_back(coupTemp);
+
+            coupTemp.promotion.type == Piece::Type::CAVALIER_BLANC;
+            coupPromotion.push_back(coupTemp);
+        }
+
+        tempCoord.lettre--;
+        if(tempCoord.estValide()){
+            if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
+                coupTemp.posFin = tempCoord;
+            
+                coupTemp.promotion.type == Piece::Type::DAME_BLANC;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::TOUR_BLANC;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::FOU_BLANC;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::CAVALIER_BLANC;
+                coupPromotion.push_back(coupTemp);
+            }
+        }   
+
+        tempCoord.lettre += 2;
+        if(tempCoord.estValide()){
+            if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
+                coupTemp.posFin = tempCoord;
+            
+                coupTemp.promotion.type == Piece::Type::DAME_BLANC;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::TOUR_BLANC;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::FOU_BLANC;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::CAVALIER_BLANC;
+                coupPromotion.push_back(coupTemp);
+            }
+        }
+    }
+    else{
+        tempCoord = { coordonnee.lettre, coordonnee.numero - 1 };
+        
+        if(this->_echiquier.getCase(tempCoord).type == Piece::Type::VIDE){
+            coupTemp.posFin = tempCoord;
+
+            coupTemp.promotion.type == Piece::Type::DAME_NOIR;
+            coupPromotion.push_back(coupTemp);
+
+            coupTemp.promotion.type == Piece::Type::TOUR_NOIR;
+            coupPromotion.push_back(coupTemp);
+
+            coupTemp.promotion.type == Piece::Type::FOU_NOIR;
+            coupPromotion.push_back(coupTemp);
+
+            coupTemp.promotion.type == Piece::Type::CAVALIER_NOIR;
+            coupPromotion.push_back(coupTemp);
+        }
+
+        tempCoord.lettre--;
+        if(tempCoord.estValide()){
+            if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
+                coupTemp.posFin = tempCoord;
+            
+                coupTemp.promotion.type == Piece::Type::DAME_NOIR;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::TOUR_NOIR;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::FOU_NOIR;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::CAVALIER_NOIR;
+                coupPromotion.push_back(coupTemp);
+            }
+        }   
+
+        tempCoord.lettre += 2;
+        if(tempCoord.estValide()){
+            if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
+                coupTemp.posFin = tempCoord;
+            
+                coupTemp.promotion.type == Piece::Type::DAME_NOIR;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::TOUR_NOIR;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::FOU_NOIR;
+                coupPromotion.push_back(coupTemp);
+
+                coupTemp.promotion.type == Piece::Type::CAVALIER_NOIR;
+                coupPromotion.push_back(coupTemp);
+            }
+        }
+    }
+    return coupPromotion;
 }
 
 /*void CoupLegaux::move(int index, char couleur)
