@@ -31,7 +31,7 @@ CoupLegaux();
 void allCoupLegaux();
 
 int getLettrePremCoup() const;
-// void move(int index, char couleur);
+void move(Coup);
 };
 
 #endif

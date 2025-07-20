@@ -89,6 +89,7 @@ std::vector<Coup> CoupLegaux::getCoupCavalier(Coord coordonnee, Piece piece) con
     coupTemp.piece.type = piece.type;
     coupTemp.posIni = coordonnee;
     coupTemp.piece = piece;
+    coupTemp.promotion.type = Piece::Type::VIDE;
 
     const std::array<Coord, 8> positions = {
         { 
@@ -122,6 +123,7 @@ std::vector<Coup> CoupLegaux::getCoupTour(Coord coordonnee, Piece piece) const
     coupTemp.piece = piece;
     coupTemp.posIni = coordonnee;
     coupTemp.posFin.numero = coordonnee.numero;
+    coupTemp.promotion.type = Piece::Type::VIDE;
     tempCoord = {coupTemp.posFin.lettre+1, coupTemp.posFin.numero};
 
     while(tempCoord.estValide()){
@@ -180,6 +182,7 @@ std::vector<Coup> CoupLegaux::getCoupFou(Coord coordonnee, Piece piece) const
 
     coupTemp.piece = piece;
     coupTemp.posIni = { coordonnee.lettre, coordonnee.numero };
+    coupTemp.promotion.type = Piece::Type::VIDE;
 
     Coord tempCoord = { coupTemp.posIni.lettre + 1, coupTemp.posIni.numero + 1 };
     while(tempCoord.estValide()){
@@ -254,6 +257,7 @@ std::vector<Coup> CoupLegaux::getCoupRoi(Coord coordonnee, Piece piece) const
 
     coupTemp.piece = piece;
     coupTemp.posIni = coordonnee;
+    coupTemp.promotion.type = Piece::Type::VIDE;
 
     if(piece.couleur()=='B'){
         for(int i = startCoord.lettre; i < startCoord.lettre + 3; i++){
@@ -504,6 +508,7 @@ int CoupLegaux::getLettrePremCoup() const
     return this->_coupLegauxBlanc[0].posIni.lettre;
 }
 
-/*void CoupLegaux::move(int index, char couleur)
+void CoupLegaux::move(Coup coup)
 {
-}*/
+    this->_echiquier.move(coup.piece, coup.posIni, coup.posFin, coup.promotion);
+}

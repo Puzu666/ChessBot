@@ -32,7 +32,7 @@ constexpr Piece getCase(Coord coordonnee) const
     return this->_plateau[coordonnee.lettre][coordonnee.numero];
 }
 
-bool move(Piece piece, Coord coordIni, Coord coordFin);
+bool move(Piece piece, Coord coordIni, Coord coordFin, Piece promotion);
 };
 
 #endif
