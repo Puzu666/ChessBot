@@ -13,22 +13,39 @@ CoupLegaux::CoupLegaux()
 }
 
 //true==blanc; false==noir
-void CoupLegaux::allCoupLegaux(bool couleur)
+void CoupLegaux::allCoupLegaux()
 {
     Piece pieceTemp;
-    Coord coordtemp;
+    Coord coordTemp;
+    std::vector<Coup> tempVector;
+
     this->_coupLegauxBlanc.clear();
     this->_coupLegauxNoir.clear();
+
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
-            coordtemp = { i, j };
-            pieceTemp = this->_echiquier.getCase(coordtemp);
-            getCoupPiece(coordtemp, pieceTemp);
+            coordTemp = { i, j };
+            pieceTemp = this->_echiquier.getCase(coordTemp);
+
+            switch(this->_echiquier.getCase(coordTemp).couleur()){
+                case 'B':
+                tempVector = this->getCoupPiece(coordTemp, pieceTemp);
+                this->_coupLegauxBlanc.insert(this->_coupLegauxBlanc.end(), tempVector.begin(), tempVector.end());
+                break;
+
+                case 'n':
+                tempVector = this->getCoupPiece(coordTemp, pieceTemp);
+                this->_coupLegauxNoir.insert(this->_coupLegauxNoir.end(), tempVector.begin(), tempVector.end());
+                break;
+
+                default:
+                break;
+            }
         }
     }
 }
 
-void CoupLegaux::getCoupPiece(Coord coordonnee, Piece piece)
+std::vector<Coup> CoupLegaux::getCoupPiece(Coord coordonnee, Piece piece)
 {
     Piece::Type tempType = piece.type;
     std::vector<Coup> tempCoupVec;
@@ -58,7 +75,10 @@ void CoupLegaux::getCoupPiece(Coord coordonnee, Piece piece)
         case Piece::Type::PION_NOIR:
         tempCoupVec = getCoupPion(coordonnee, piece);
         break;
+        case Piece::Type::VIDE:
+        break;
     }
+    return tempCoupVec;
 }
 
 std::vector<Coup> CoupLegaux::getCoupCavalier(Coord coordonnee, Piece piece) const
@@ -174,7 +194,7 @@ std::vector<Coup> CoupLegaux::getCoupFou(Coord coordonnee, Piece piece) const
         tempCoord.numero++;
     }
 
-    Coord tempCoord = { coupTemp.posIni.lettre + 1, coupTemp.posIni.numero - 1 };
+    tempCoord = { coupTemp.posIni.lettre + 1, coupTemp.posIni.numero - 1 };
     while(tempCoord.estValide()){
         if(this->_verifCase(tempCoord, piece)){
             coupTemp.posFin = tempCoord;
@@ -187,7 +207,7 @@ std::vector<Coup> CoupLegaux::getCoupFou(Coord coordonnee, Piece piece) const
         tempCoord.numero--;
     }
 
-    Coord tempCoord = { coupTemp.posIni.lettre - 1, coupTemp.posIni.numero + 1 };
+    tempCoord = { coupTemp.posIni.lettre - 1, coupTemp.posIni.numero + 1 };
     while(tempCoord.estValide()){
         if(this->_verifCase(tempCoord, piece)){
             coupTemp.posFin = tempCoord;
@@ -200,7 +220,7 @@ std::vector<Coup> CoupLegaux::getCoupFou(Coord coordonnee, Piece piece) const
         tempCoord.numero++;
     }
 
-    Coord tempCoord = { coupTemp.posIni.lettre - 1, coupTemp.posIni.numero - 1 };
+    tempCoord = { coupTemp.posIni.lettre - 1, coupTemp.posIni.numero - 1 };
     while(tempCoord.estValide()){
         if(this->_verifCase(tempCoord, piece)){
             coupTemp.posFin = tempCoord;
@@ -229,30 +249,37 @@ std::vector<Coup> CoupLegaux::getCoupRoi(Coord coordonnee, Piece piece) const
 {
     Coup coupTemp;
     std::vector<Coup> coupRoi;
-    Coord tempCoord = { coordonnee.lettre - 1, coordonnee.numero - 1 };
+    Coord startCoord = { coordonnee.lettre - 1, coordonnee.numero - 1 };
+    Coord tempCoord;
 
     coupTemp.piece = piece;
     coupTemp.posIni = coordonnee;
 
     if(piece.couleur()=='B'){
-        for(tempCoord.lettre; tempCoord.lettre < tempCoord.lettre + 3; tempCoord.lettre++){
-            for(tempCoord.numero; tempCoord.numero < tempCoord.numero + 3; tempCoord.numero++){
+        for(int i = startCoord.lettre; i < startCoord.lettre + 3; i++){
+            for(int j = startCoord.numero; j < startCoord.numero + 3; j++){
+                tempCoord = startCoord;
+                tempCoord.lettre += i;
+                tempCoord.numero += j;
                 if(tempCoord.estValide()){
-                    if(this->_verifCase(coordonnee, piece)) { coupRoi.push_back(coupTemp); }                        
+                    if(this->_verifCase(tempCoord, piece)) { coupRoi.push_back(coupTemp); }                        
                 }
             }
         }
     }
     else{
-        for(tempCoord.lettre; tempCoord.lettre < tempCoord.lettre + 3; tempCoord.lettre++){
-            for(tempCoord.numero; tempCoord.numero < tempCoord.numero + 3; tempCoord.numero++){
+        for(int i = startCoord.lettre; i < startCoord.lettre + 3; i++){
+            for(int j = startCoord.numero; j < startCoord.numero + 3; j++){
+                tempCoord = startCoord;
+                tempCoord.lettre += i;
+                tempCoord.numero += j;
                 if(tempCoord.estValide()){
-                    if(this->_verifCase(coordonnee, piece)) { coupRoi.push_back(coupTemp); }
+                    if(this->_verifCase(tempCoord, piece)) { coupRoi.push_back(coupTemp); }                        
                 }
             }
         }
     }
-    
+
     return coupRoi;
 }
 
@@ -354,9 +381,6 @@ std::vector<Coup> CoupLegaux::getCoupPromotion(Coord coordonnee, Piece piece) co
 
     coupTemp.piece = piece;
     coupTemp.posIni = coordonnee;
-    
-    
-    Piece::Type pi = Piece::Type::VIDE;
 
     if(piece.couleur() == 'B'){
         tempCoord = { coordonnee.lettre, coordonnee.numero + 1 };
@@ -364,16 +388,16 @@ std::vector<Coup> CoupLegaux::getCoupPromotion(Coord coordonnee, Piece piece) co
         if(this->_echiquier.getCase(tempCoord).type == Piece::Type::VIDE){
             coupTemp.posFin = tempCoord;
 
-            coupTemp.promotion.type == Piece::Type::DAME_BLANC;
+            coupTemp.promotion.type = Piece::Type::DAME_BLANC;
             coupPromotion.push_back(coupTemp);
 
-            coupTemp.promotion.type == Piece::Type::TOUR_BLANC;
+            coupTemp.promotion.type = Piece::Type::TOUR_BLANC;
             coupPromotion.push_back(coupTemp);
 
-            coupTemp.promotion.type == Piece::Type::FOU_BLANC;
+            coupTemp.promotion.type = Piece::Type::FOU_BLANC;
             coupPromotion.push_back(coupTemp);
 
-            coupTemp.promotion.type == Piece::Type::CAVALIER_BLANC;
+            coupTemp.promotion.type = Piece::Type::CAVALIER_BLANC;
             coupPromotion.push_back(coupTemp);
         }
 
@@ -382,16 +406,16 @@ std::vector<Coup> CoupLegaux::getCoupPromotion(Coord coordonnee, Piece piece) co
             if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
                 coupTemp.posFin = tempCoord;
             
-                coupTemp.promotion.type == Piece::Type::DAME_BLANC;
+                coupTemp.promotion.type = Piece::Type::DAME_BLANC;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::TOUR_BLANC;
+                coupTemp.promotion.type = Piece::Type::TOUR_BLANC;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::FOU_BLANC;
+                coupTemp.promotion.type = Piece::Type::FOU_BLANC;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::CAVALIER_BLANC;
+                coupTemp.promotion.type = Piece::Type::CAVALIER_BLANC;
                 coupPromotion.push_back(coupTemp);
             }
         }   
@@ -401,16 +425,16 @@ std::vector<Coup> CoupLegaux::getCoupPromotion(Coord coordonnee, Piece piece) co
             if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
                 coupTemp.posFin = tempCoord;
             
-                coupTemp.promotion.type == Piece::Type::DAME_BLANC;
+                coupTemp.promotion.type = Piece::Type::DAME_BLANC;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::TOUR_BLANC;
+                coupTemp.promotion.type = Piece::Type::TOUR_BLANC;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::FOU_BLANC;
+                coupTemp.promotion.type = Piece::Type::FOU_BLANC;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::CAVALIER_BLANC;
+                coupTemp.promotion.type = Piece::Type::CAVALIER_BLANC;
                 coupPromotion.push_back(coupTemp);
             }
         }
@@ -421,16 +445,16 @@ std::vector<Coup> CoupLegaux::getCoupPromotion(Coord coordonnee, Piece piece) co
         if(this->_echiquier.getCase(tempCoord).type == Piece::Type::VIDE){
             coupTemp.posFin = tempCoord;
 
-            coupTemp.promotion.type == Piece::Type::DAME_NOIR;
+            coupTemp.promotion.type = Piece::Type::DAME_NOIR;
             coupPromotion.push_back(coupTemp);
 
-            coupTemp.promotion.type == Piece::Type::TOUR_NOIR;
+            coupTemp.promotion.type = Piece::Type::TOUR_NOIR;
             coupPromotion.push_back(coupTemp);
 
-            coupTemp.promotion.type == Piece::Type::FOU_NOIR;
+            coupTemp.promotion.type = Piece::Type::FOU_NOIR;
             coupPromotion.push_back(coupTemp);
 
-            coupTemp.promotion.type == Piece::Type::CAVALIER_NOIR;
+            coupTemp.promotion.type = Piece::Type::CAVALIER_NOIR;
             coupPromotion.push_back(coupTemp);
         }
 
@@ -439,16 +463,16 @@ std::vector<Coup> CoupLegaux::getCoupPromotion(Coord coordonnee, Piece piece) co
             if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
                 coupTemp.posFin = tempCoord;
             
-                coupTemp.promotion.type == Piece::Type::DAME_NOIR;
+                coupTemp.promotion.type = Piece::Type::DAME_NOIR;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::TOUR_NOIR;
+                coupTemp.promotion.type = Piece::Type::TOUR_NOIR;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::FOU_NOIR;
+                coupTemp.promotion.type = Piece::Type::FOU_NOIR;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::CAVALIER_NOIR;
+                coupTemp.promotion.type = Piece::Type::CAVALIER_NOIR;
                 coupPromotion.push_back(coupTemp);
             }
         }   
@@ -458,16 +482,16 @@ std::vector<Coup> CoupLegaux::getCoupPromotion(Coord coordonnee, Piece piece) co
             if(this->_echiquier.getCase(tempCoord).couleur() == 'n'){
                 coupTemp.posFin = tempCoord;
             
-                coupTemp.promotion.type == Piece::Type::DAME_NOIR;
+                coupTemp.promotion.type = Piece::Type::DAME_NOIR;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::TOUR_NOIR;
+                coupTemp.promotion.type = Piece::Type::TOUR_NOIR;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::FOU_NOIR;
+                coupTemp.promotion.type = Piece::Type::FOU_NOIR;
                 coupPromotion.push_back(coupTemp);
 
-                coupTemp.promotion.type == Piece::Type::CAVALIER_NOIR;
+                coupTemp.promotion.type = Piece::Type::CAVALIER_NOIR;
                 coupPromotion.push_back(coupTemp);
             }
         }
@@ -475,50 +499,11 @@ std::vector<Coup> CoupLegaux::getCoupPromotion(Coord coordonnee, Piece piece) co
     return coupPromotion;
 }
 
+int CoupLegaux::getLettrePremCoup() const
+{
+    return this->_coupLegauxBlanc[0].posIni.lettre;
+}
+
 /*void CoupLegaux::move(int index, char couleur)
 {
-    if(couleur == 'B' && index < this->_coupLegauxBlanc.size()){
-        int temp = index;
-        int i = 0;
-        while(i < this->_coupParPieceBlanc.size() && temp>0){
-            temp -= std::get <1> (this->_coupParPieceBlanc[i]);
-            i++;
-        }
-        i--;
-        this->_dernierCoup.posIni.first = std::get <0> (this->_coupParPieceBlanc[i]).first;
-        this->_dernierCoup.posIni.second = std::get <0> (this->_coupParPieceBlanc[i]).second;
-        this->_dernierCoup.posFin.first = this->_coupLegauxBlanc[index].first;
-        this->_dernierCoup.posFin.second = this->_coupLegauxBlanc[index].second;
-        this->_dernierCoup.piece = std::get <2> (this->_coupParPieceBlanc[i]);
-        this->_dernierCoup.couleur = 'B';
-        bool verif;
-        verif = this->_echiquier.move(this->_dernierCoup.piece 
-                                    , this->_dernierCoup.posIni.first
-                                    , this->_dernierCoup.posIni.second
-                                    , this->_dernierCoup.posFin.first
-                                    , this->_dernierCoup.posFin.second);
-        assert(verif);
-    }
-    else if(index < this->_coupLegauxNoir.size()){
-        int temp = index;
-        int i = 0;
-        while(i < this->_coupParPieceNoir.size() && temp>0){
-            temp -= std::get <1> (this->_coupParPieceNoir[i]);
-            i++;
-        }
-        i--;
-        this->_dernierCoup.posIni.first = std::get <0> (this->_coupParPieceNoir[i]).first;
-        this->_dernierCoup.posIni.second = std::get <0> (this->_coupParPieceNoir[i]).second;
-        this->_dernierCoup.posFin.first = this->_coupLegauxNoir[index].first;
-        this->_dernierCoup.posFin.second = this->_coupLegauxNoir[index].second;
-        this->_dernierCoup.piece = std::get <2> (this->_coupParPieceNoir[i]);
-        this->_dernierCoup.couleur = 'n';
-        bool verif;
-        verif = this->_echiquier.move(this->_dernierCoup.piece 
-                                    , this->_dernierCoup.posIni.first
-                                    , this->_dernierCoup.posIni.second
-                                    , this->_dernierCoup.posFin.first
-                                    , this->_dernierCoup.posFin.second);
-        assert(verif);
-    }
 }*/

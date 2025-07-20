@@ -16,10 +16,7 @@ constexpr bool _verifCase(Coord coordonnee, Piece piece) const{
     return this->_echiquier.getCase(coordonnee).couleur() != piece.couleur();
 }
 
-public:
-CoupLegaux();
-void allCoupLegaux(bool);
-void getCoupPiece(Coord, Piece);
+std::vector<Coup> getCoupPiece(Coord, Piece);
 
 std::vector<Coup> getCoupCavalier(Coord, Piece) const;
 std::vector<Coup> getCoupTour(Coord, Piece) const;
@@ -29,6 +26,11 @@ std::vector<Coup> getCoupRoi(Coord, Piece) const;
 std::vector<Coup> getCoupPion(Coord, Piece) const;
 std::vector<Coup> getCoupPromotion(Coord, Piece) const;
 
+public:
+CoupLegaux();
+void allCoupLegaux();
+
+int getLettrePremCoup() const;
 // void move(int index, char couleur);
 };
 

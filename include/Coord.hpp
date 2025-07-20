@@ -19,8 +19,6 @@ struct Coord{
         this->numero + coordonnee.numero
         };
 
-        assert(coordTemp.estValide());
-
         return coordTemp;
     }
 };

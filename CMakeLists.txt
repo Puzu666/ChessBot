@@ -18,10 +18,10 @@ target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=undefined -fsanitize=a
 target_link_options   (${PROJECT_NAME} PRIVATE -fsanitize=undefined -fsanitize=address -fno-omit-frame-pointer)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -pedantic-errors -Wno-unknown-pragmas)
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -pedantic-errors -Wno-unknown-pragmas -Wconversion)
     if(ANALYSE_STATIQUE)
         target_compile_options(${PROJECT_NAME} PRIVATE -fanalyzer)
     endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic)
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Wconversion)
 endif()
