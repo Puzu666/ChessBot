@@ -32,6 +32,10 @@ void allCoupLegaux();
 
 int getLettrePremCoup() const;
 void move(Coup);
+
+std::vector<Coup> getVectorCoupLegaux(bool couleur);
+
+void setEchiquier(Echiquier);
 };
 
 #endif

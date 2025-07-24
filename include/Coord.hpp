@@ -21,6 +21,10 @@ struct Coord{
 
         return coordTemp;
     }
+
+    constexpr bool estPareil(Coord coordonnee) const{
+        return coordonnee.lettre == this->lettre && coordonnee.numero == this->numero;
+    }
 };
 
 #endif

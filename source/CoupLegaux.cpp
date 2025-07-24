@@ -259,31 +259,17 @@ std::vector<Coup> CoupLegaux::getCoupRoi(Coord coordonnee, Piece piece) const
     coupTemp.posIni = coordonnee;
     coupTemp.promotion.type = Piece::Type::VIDE;
 
-    if(piece.couleur()=='B'){
-        for(int i = startCoord.lettre; i < startCoord.lettre + 3; i++){
-            for(int j = startCoord.numero; j < startCoord.numero + 3; j++){
-                tempCoord = startCoord;
-                tempCoord.lettre += i;
-                tempCoord.numero += j;
-                if(tempCoord.estValide()){
-                    if(this->_verifCase(tempCoord, piece)) { coupRoi.push_back(coupTemp); }                        
-                }
+    for(int i = startCoord.lettre; i < startCoord.lettre + 3; i++){
+        for(int j = startCoord.numero; j < startCoord.numero + 3; j++){
+            tempCoord = startCoord;
+            tempCoord.lettre += i;
+            tempCoord.numero += j;
+            if(tempCoord.estValide()){
+                if(this->_verifCase(tempCoord, piece)) { coupRoi.push_back(coupTemp); }                        
             }
         }
     }
-    else{
-        for(int i = startCoord.lettre; i < startCoord.lettre + 3; i++){
-            for(int j = startCoord.numero; j < startCoord.numero + 3; j++){
-                tempCoord = startCoord;
-                tempCoord.lettre += i;
-                tempCoord.numero += j;
-                if(tempCoord.estValide()){
-                    if(this->_verifCase(tempCoord, piece)) { coupRoi.push_back(coupTemp); }                        
-                }
-            }
-        }
-    }
-
+    
     return coupRoi;
 }
 
@@ -511,4 +497,24 @@ int CoupLegaux::getLettrePremCoup() const
 void CoupLegaux::move(Coup coup)
 {
     this->_echiquier.move(coup.piece, coup.posIni, coup.posFin, coup.promotion);
+}
+
+std::vector<Coup> CoupLegaux::getVectorCoupLegaux(bool couleur)
+{
+    return couleur? this->_coupLegauxBlanc : this->_coupLegauxNoir;
+}
+
+void CoupLegaux::setEchiquier(Echiquier echiquier)
+{
+    std::array<Piece, 64> tempArray;
+    size_t index = 0;
+    Coord tempCoord;
+    for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 8; j++){
+            tempCoord = { i, j};
+            tempArray[index] = echiquier.getCase(tempCoord);
+        }
+    }
+
+    this->_echiquier.setPlateau(tempArray);
 }

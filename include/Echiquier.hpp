@@ -33,6 +33,8 @@ constexpr Piece getCase(Coord coordonnee) const
 }
 
 bool move(Piece piece, Coord coordIni, Coord coordFin, Piece promotion);
+bool setCase(Coord coordonnee, Piece piece);
+bool setPlateau(std::array<Piece, 64>);
 };
 
 #endif
